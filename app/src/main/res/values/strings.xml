@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">BoltDogApp</string>
+    <string name="lastname">Nume</string>
+    <string name="firstname">Prenume</string>
+    <string name="email">Email</string>
+    <string name="phonenr">NrTel</string>
+    <string name="username">Nume utilizator</string>
+    <string name="password">Parola</string>
+    <string name="register_button">Creeaza-ti cont</string>
+    <string name="login_button">Intra in cont</string>
+    <string name="create_an_account">Nu ai cont?</string>
+    <string name="selectrole_button">Intra in cont</string>
+    <string name="radioGroup" />
+    <string name="dogwalker_radioButton">Petsitter</string>
+    <string name="dogsowner_radioButton">Posesor</string>
+</resources>

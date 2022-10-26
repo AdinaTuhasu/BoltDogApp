@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "558748676972",
+    "project_id": "boltdogapp",
+    "storage_bucket": "boltdogapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558748676972:android:306f2b718c283e2c703949",
+        "android_client_info": {
+          "package_name": "com.example.boltdogapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "558748676972-k0qk7nkchjg1r1ss9sfreqbk5qqoblf5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.boltdogapp",
+            "certificate_hash": "db16ac20164aa6fc945b01d2f683804a4497c441"
+          }
+        },
+        {
+          "client_id": "558748676972-d36gugmt0u6k9of7ndmhv0k3chjhp9b3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlGDIhVh07VShj8tGvOxyonH4gmvHEfGY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558748676972-d36gugmt0u6k9of7ndmhv0k3chjhp9b3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
