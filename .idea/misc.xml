@@ -8,7 +8,16 @@
         <entry key="..\:/Facultate/AN4/BoltDogApp/app/src/main/res/layout/activity_register.xml" value="0.196875" />
         <entry key="..\:/Users/Admin/Desktop/LICENTA/BoltDogApp/app/src/main/res/layout/activity_login.xml" value="0.152" />
         <entry key="..\:/Users/Admin/Desktop/LICENTA/BoltDogApp/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Desktop/LICENTA/BoltDogApp/app/src/main/res/layout/activity_owner.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Desktop/LICENTA/BoltDogApp/app/src/main/res/layout/activity_petsitter.xml" value="0.1" />
         <entry key="..\:/Users/Admin/Desktop/LICENTA/BoltDogApp/app/src/main/res/layout/activity_register.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Desktop/LICENTA/BoltDogApp/app/src/main/res/layout/announcement_layout.xml" value="0.1" />
+        <entry key="..\:/Users/Admin/Desktop/LICENTA/BoltDogApp/app/src/main/res/layout/fragment_add_announcements.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Desktop/LICENTA/BoltDogApp/app/src/main/res/layout/fragment_announcements.xml" value="0.1" />
+        <entry key="..\:/Users/Admin/Desktop/LICENTA/BoltDogApp/app/src/main/res/layout/fragment_view_requests.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Desktop/LICENTA/BoltDogApp/app/src/main/res/layout/nav_header.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/Admin/Desktop/LICENTA/BoltDogApp/app/src/main/res/menu/drawer_owner.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Desktop/LICENTA/BoltDogApp/app/src/main/res/menu/drawer_petsitter.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

@@ -13,4 +13,12 @@
     <string name="radioGroup" />
     <string name="dogwalker_radioButton">Petsitter</string>
     <string name="dogsowner_radioButton">Posesor</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="name">Nume</string>
+    <string name="breed">Rasa</string>
+    <string name="age">Varsta</string>
+    <string name="description">Descriere</string>
+    <string name="address">Locatie</string>
+
 </resources>

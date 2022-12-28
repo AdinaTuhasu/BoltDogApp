@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:id="@+id/pet_image"
+                android:src="@drawable/dog_icon">
+
+            </ImageView>
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Deschide camera"
+                android:id="@+id/open_camera">
+            </androidx.appcompat.widget.AppCompatButton>
+
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+
+            android:id="@+id/pet_name"/>
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/breed"
+            android:id="@+id/pet_breed"/>
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/age"
+            android:id="@+id/pet_age">
+
+        </EditText>
+        <EditText
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/description"
+            android:lines="3"
+            android:id="@+id/pet_description">
+
+        </EditText>
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/address"
+            android:id="@+id/pet_address">
+
+        </EditText>
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/add_announce"
+            android:text="Adauga">
+
+        </androidx.appcompat.widget.AppCompatButton>
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>
