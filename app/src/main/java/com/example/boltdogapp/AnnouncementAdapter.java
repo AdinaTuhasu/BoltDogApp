@@ -52,6 +52,17 @@ public class AnnouncementAdapter extends BaseAdapter {
         petName.setText(list.get(i).getName());
         ownerName.setText(list.get(i).getOwnername());
         address.setText(list.get(i).getAddress());
+
+        btnView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         return view;
+
+
     }
+
+
 }

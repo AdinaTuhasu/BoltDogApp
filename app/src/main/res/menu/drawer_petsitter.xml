@@ -3,13 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_profil"
+        <item android:id="@+id/nav_view_announcements"
 
             android:title="Anunturi"/>
-        <item
-            android:id="@+id/nav_logout"
 
-            android:title="Logout"/>
     </group>
 
 </menu>

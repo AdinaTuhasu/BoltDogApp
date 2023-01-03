@@ -10,10 +10,7 @@
 
             android:title="Vizualizare cereri"/>
 
-        <item
-            android:id="@+id/nav_logout1"
 
-            android:title="Logout"/>
     </group>
 
 </menu>

@@ -10,7 +10,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BoltDogApp">
         <activity
-            android:name=".OwnerActivity"
+            android:name=".ViewAnnouncementsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PetsitterHomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".addAnnouncementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OwnerHomeActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".DetailAnnouncementActivity"
             android:exported="false" />
         <activity
             android:name=".PetsitterActivity"

@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                                             startActivity(new Intent(LoginActivity.this, PetsitterActivity.class));
                                             finish();
                                         } else {
-                                            startActivity(new Intent(LoginActivity.this, OwnerActivity.class));
+                                            startActivity(new Intent(LoginActivity.this,OwnerHomeActivity2.class));
                                             finish();
                                         }
                                     }

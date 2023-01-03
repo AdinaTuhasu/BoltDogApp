@@ -13,11 +13,22 @@
         android:src="@mipmap/ic_launcher_round"
         android:id="@+id/imgProfile"/>
     <TextView
+        android:id="@+id/tvNumeUserConectat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:text="Coding in Flow"
-        android:id="@+id/header_text">
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black" />
 
-    </TextView>
+    <TextView
+        android:id="@+id/tvEmailUserConectat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvNumeUserConectat"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/black" />
+
+
 </LinearLayout>

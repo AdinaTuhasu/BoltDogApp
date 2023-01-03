@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.boltdogapp.model.Announcement;
@@ -31,7 +32,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-public class AddAnnouncements extends Fragment {
+public class AddAnnouncements extends AppCompatActivity {
     private DatabaseReference mydb = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private FirebaseAuth mAuth=FirebaseAuth.getInstance();
     StorageReference storageReference= FirebaseStorage.getInstance().getReference("petPhotos");
@@ -51,7 +52,6 @@ public class AddAnnouncements extends Fragment {
     private ImageView imageView;
 
     @Nullable
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_add_announcements,container,false);
 
@@ -60,7 +60,6 @@ public class AddAnnouncements extends Fragment {
         petBreed=view.findViewById(R.id.pet_breed);
         petAge=view.findViewById(R.id.pet_age);
         petDescription=view.findViewById(R.id.pet_description);
-
         imageView=view.findViewById(R.id.pet_image);
         imgUri=Uri.parse(imageView.toString());
         openCamera=view.findViewById(R.id.open_camera);
