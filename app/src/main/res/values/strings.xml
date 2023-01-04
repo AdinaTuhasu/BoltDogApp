@@ -20,5 +20,5 @@
     <string name="age">Varsta</string>
     <string name="description">Descriere</string>
     <string name="address">Locatie</string>
-
+    <string name="ownername">Posesor</string>
 </resources>

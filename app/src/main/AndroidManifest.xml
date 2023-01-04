@@ -10,7 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BoltDogApp">
         <activity
-            android:name=".ViewAnnouncementsActivity"
+            android:name=".ViewAnnouncementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ViewRequests"
             android:exported="false" />
         <activity
             android:name=".PetsitterHomeActivity"
@@ -23,9 +26,6 @@
             android:exported="false" />
         <activity
             android:name=".DetailAnnouncementActivity"
-            android:exported="false" />
-        <activity
-            android:name=".PetsitterActivity"
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"

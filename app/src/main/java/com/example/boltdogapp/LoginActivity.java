@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         User user = snapshot.getValue(User.class);
                                         if (user.isPetsitter()) {
-                                            startActivity(new Intent(LoginActivity.this, PetsitterActivity.class));
+                                            startActivity(new Intent(LoginActivity.this, PetsitterHomeActivity.class));
                                             finish();
                                         } else {
                                             startActivity(new Intent(LoginActivity.this,OwnerHomeActivity2.class));

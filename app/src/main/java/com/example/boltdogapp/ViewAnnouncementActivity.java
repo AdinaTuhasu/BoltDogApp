@@ -6,8 +6,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.annotation.SuppressLint;
@@ -19,11 +17,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.boltdogapp.model.Announcement;
 import com.example.boltdogapp.model.User;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,9 +33,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class ViewAnnouncementActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -51,24 +50,50 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
 
 
     private ImageView imageView;
-    private ImageView ivProfil,ivReview;
+    private ImageView ivProfil, ivReview;
 
     private FirebaseUser userConectat;
-    FirebaseAuth mAuth=FirebaseAuth.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
+    private ListView listView;
+    private ArrayList<Announcement> arrayList= new ArrayList<>();
+    private AnnouncementAdapter announcementAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_owner_home2);
 
+        setContentView(R.layout.activity_view_announcement);
+        listView=findViewById(R.id.announcements_list);
+        reference.child("announcements").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                    Announcement request=dataSnapshot1.getValue(Announcement.class);
+//                    System.out.println(announcement);
+//
+                    arrayList.add(request);
+                    announcementAdapter.notifyDataSetChanged();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        announcementAdapter= new AnnouncementAdapter(arrayList,ViewAnnouncementActivity.this);
+
+        listView.setAdapter(announcementAdapter);
+        announcementAdapter.notifyDataSetChanged();
         initializeazaAtribute();
 
         seteazaToolbar();
 
         seteazaToggle();
-
 
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -82,7 +107,7 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
 
 
     private void seteazaToggle() {
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
@@ -107,10 +132,9 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
         idUser = userConectat.getUid();
 
         ivProfil = findViewById(R.id.ivProfile);
-        ivReview= findViewById(R.id.ivReview);
+        ivReview = findViewById(R.id.ivReview);
 
     }
-
 
 
     public void incarcaInfoNavMenu() {
@@ -118,13 +142,13 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                         User user = snapshot.getValue(User.class);
+                        User user = snapshot.getValue(User.class);
 
                         if (user != null) {
                             String nume = user.getLastname();
                             String prenume = user.getFirstname();
                             numeComplet = nume + " " + prenume;
-                            String email =user.getEmail();
+                            String email = user.getEmail();
 
 
                             tvNumeUserConectat.setText(numeComplet);
@@ -137,7 +161,7 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("preluareOwner", error.getMessage());
+                        Log.e("preluarePetsitter", error.getMessage());
                     }
                 });
     }
@@ -149,7 +173,7 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
         switch (view.getId()) {
 
             case R.id.ivProfile:
-               // startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                // startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                 break;
             case R.id.ivReview:
                 // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
@@ -163,7 +187,7 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAuth.signOut();
-                        startActivity(new Intent(OwnerHomeActivity2.this, LoginActivity.class));
+                        startActivity(new Intent(ViewAnnouncementActivity.this, LoginActivity.class));
 
                         finish();
                     }
@@ -183,14 +207,11 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_add_announcements:
-                startActivity(new Intent(getApplicationContext(),addAnnouncementActivity.class));
+            case R.id.nav_view_announcements:
+                //startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
                 break;
-            case R.id.nav_view_requests:
-                startActivity(new Intent(getApplicationContext(),ViewRequests.class));
-                break;
+
         }
         return true;
     }
 }
-

@@ -1,8 +1,10 @@
 package com.example.boltdogapp.model;
 
+import java.io.Serializable;
+import java.util.Objects;
 import java.util.SplittableRandom;
 
-public class Announcement {
+public class Announcement implements Serializable {
     private String ownername;
     private String name;
     private String breed;
@@ -93,4 +95,6 @@ public class Announcement {
                 ", address='" + address + '\'' +
                 '}';
     }
+
+
 }

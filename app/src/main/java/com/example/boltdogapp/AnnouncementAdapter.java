@@ -1,6 +1,7 @@
 package com.example.boltdogapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,14 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.example.boltdogapp.model.Announcement;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -17,6 +25,7 @@ public class AnnouncementAdapter extends BaseAdapter {
     TextView petName,ownerName, address;
     private ArrayList<Announcement> list = new ArrayList<Announcement>();
     private Context context;
+    DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
 
     public AnnouncementAdapter(ArrayList<Announcement> list, Context context) {
         this.list = list;
@@ -56,6 +65,10 @@ public class AnnouncementAdapter extends BaseAdapter {
         btnView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Announcement an= list.get(i);
+                Intent i=new Intent(context,DetailAnnouncementActivity.class);
+                i.putExtra("announcement",an);
+                context.startActivity(i);
 
             }
         });

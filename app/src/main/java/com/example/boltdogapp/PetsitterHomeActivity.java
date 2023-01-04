@@ -31,38 +31,37 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class PetsitterHomeActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
-private Toolbar toolbar;
-private DrawerLayout drawerLayout;
-private ActionBarDrawerToggle toggle;
-private NavigationView navigationView;
+    private Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
 
-private RelativeLayout rlLogout;
+    private RelativeLayout rlLogout;
 
-private String idUser;
+    private String idUser;
 
-private TextView tvNumeUserConectat;
-private TextView tvEmailUserConectat;
+    private TextView tvNumeUserConectat;
+    private TextView tvEmailUserConectat;
 
 
-private ImageView imageView;
-private ImageView ivProfil,ivReview;
+    private ImageView imageView;
+    private ImageView ivProfil, ivReview;
 
-private FirebaseUser userConectat;
-        FirebaseAuth mAuth=FirebaseAuth.getInstance();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
-private String numeComplet;
+    private FirebaseUser userConectat;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
+    private String numeComplet;
 
-@Override
-protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_owner_home2);
+        setContentView(R.layout.activity_petsitter_home);
 
         initializeazaAtribute();
 
         seteazaToolbar();
 
         seteazaToggle();
-
 
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -72,21 +71,21 @@ protected void onCreate(Bundle savedInstanceState) {
 
 
         incarcaInfoNavMenu();
-        }
+    }
 
 
-private void seteazaToggle() {
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+    private void seteazaToggle() {
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        }
+    }
 
-private void seteazaToolbar() {
+    private void seteazaToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
-        }
+    }
 
-private void initializeazaAtribute() {
+    private void initializeazaAtribute() {
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawerLayout);
 
@@ -101,72 +100,88 @@ private void initializeazaAtribute() {
         idUser = userConectat.getUid();
 
         ivProfil = findViewById(R.id.ivProfile);
-        ivReview= findViewById(R.id.ivReview);
+        ivReview = findViewById(R.id.ivReview);
 
-        }
+    }
 
 
-
-public void incarcaInfoNavMenu() {
+    public void incarcaInfoNavMenu() {
         reference.child(idUser)
-        .addListenerForSingleValueEvent(new ValueEventListener() {
-@Override
-public void onDataChange(@NonNull DataSnapshot snapshot) {
-        User user = snapshot.getValue(User.class);
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        User user = snapshot.getValue(User.class);
 
-        if (user != null) {
-        String nume = user.getLastname();
-        String prenume = user.getFirstname();
-        numeComplet = nume + " " + prenume;
-        String email =user.getEmail();
-
-
-        tvNumeUserConectat.setText(numeComplet);
-
-        tvEmailUserConectat.setText(email);
+                        if (user != null) {
+                            String nume = user.getLastname();
+                            String prenume = user.getFirstname();
+                            numeComplet = nume + " " + prenume;
+                            String email = user.getEmail();
 
 
-        }
-        }
+                            tvNumeUserConectat.setText(numeComplet);
 
-@Override
-public void onCancelled(@NonNull DatabaseError error) {
-        Log.e("preluarePetsitter", error.getMessage());
-        }
-        });
-        }
+                            tvEmailUserConectat.setText(email);
 
-@RequiresApi(api = Build.VERSION_CODES.N)
-@SuppressLint("NonConstantResourceId")
-@Override
-public void onClick(View view) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("preluarePetsitter", error.getMessage());
+                    }
+                });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public void onClick(View view) {
         switch (view.getId()) {
 
-        case R.id.ivProfile:
-        // startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-        break;
-        case R.id.ivReview:
-        // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
-        break;
+            case R.id.ivProfile:
+                // startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                break;
+            case R.id.ivReview:
+                // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
+                break;
 
-        case R.id.rlLogout:
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-        finish();
-        break;
-        }
-        }
+            case R.id.rlLogout:
+                AlertDialog.Builder builder= new AlertDialog.Builder(this);
+                builder.setTitle("Logout");
+                builder.setMessage("Sunteti sigur ca vreti sa va deconectati?");
+                builder.setPositiveButton("Da", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mAuth.signOut();
+                        startActivity(new Intent(PetsitterHomeActivity.this, LoginActivity.class));
 
-@SuppressLint("NonConstantResourceId")
-@Override
-public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("Nu", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.show();
+                break;
+        }
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.nav_view_announcements:
-       // startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
-        break;
+            case R.id.nav_view_announcements:
+                startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
+                finish();
+                break;
 
         }
         return true;
-        }
-        }
+    }
+}
 
