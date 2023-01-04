@@ -61,36 +61,39 @@ public class ViewRequests extends AppCompatActivity implements View.OnClickListe
     private ListView listView;
     private ArrayList<Request> arrayList= new ArrayList<>();
     private RequestAdapter requestAdapter;
-    User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_requests);
         listView=findViewById(R.id.requests_list);
-        reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                user=snapshot.getValue(User.class);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         reference.child("requests").addValueEventListener(new ValueEventListener() {
+            User user;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
-                    Request request=dataSnapshot1.getValue(Request.class);
+                reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
+                        user=snapshot2.getValue(User.class);
+                        for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                            Request request=dataSnapshot1.getValue(Request.class);
 //                    System.out.println(announcement);
-                    if(request.getOwnername().equals(user.getLastname()+" "+user.getFirstname())){
-                        arrayList.add(request);
-                        requestAdapter.notifyDataSetChanged();
+                            if(request.getOwnername().equals(user.getLastname()+" "+user.getFirstname())){
+                                arrayList.add(request);
+                                requestAdapter.notifyDataSetChanged();
+                            }
+
+
+                        }
                     }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                }
+                    }
+                });
+
             }
 
             @Override
