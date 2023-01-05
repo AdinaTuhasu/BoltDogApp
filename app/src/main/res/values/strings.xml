@@ -21,4 +21,8 @@
     <string name="description">Descriere</string>
     <string name="address">Locatie</string>
     <string name="ownername">Posesor</string>
+    <string name="err_empty_nume">Introduceți numele!</string>
+    <string name="err_empty_prenume">Introduceți prenumele!</string>
+    <string name="err_empty_telefon">Introduceți numarul de telefon!</string>
+
 </resources>

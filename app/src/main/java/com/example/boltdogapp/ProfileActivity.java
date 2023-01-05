@@ -11,17 +11,23 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.boltdogapp.model.Announcement;
+import com.example.boltdogapp.model.Request;
 import com.example.boltdogapp.model.User;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +36,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class PetsitterHomeActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -45,18 +55,27 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
 
 
     private ImageView imageView;
-    private ImageView ivProfil, ivReview;
+    private ImageView  ivReview;
 
     private FirebaseUser userConectat;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
 
+    User user;
+    TextView NumePetsitter,PrenumePetsitter,NrTelPetsitter,EmailPetsitter;
+    Button btnEdit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_petsitter_home);
+        setContentView(R.layout.activity_profile);
+        Intent i=getIntent();
 
+        NumePetsitter=findViewById(R.id.numePetsitter);
+        PrenumePetsitter=findViewById(R.id.prenumePetsitter);
+        NrTelPetsitter=findViewById(R.id.telefonPetsitter);
+        EmailPetsitter=findViewById(R.id.emailPetsitter);
+        btnEdit=findViewById(R.id.btn_edit);
         initializeazaAtribute();
 
         seteazaToolbar();
@@ -66,11 +85,24 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
 
         navigationView.setNavigationItemSelectedListener(this);
         rlLogout.setOnClickListener(this);
-        ivProfil.setOnClickListener(this);
         ivReview.setOnClickListener(this);
+        btnEdit.setOnClickListener(this);
 
+        reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                user=snapshot.getValue(User.class);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         incarcaInfoNavMenu();
+        incarcaInfoProfile();
+
+
     }
 
 
@@ -99,7 +131,7 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
         userConectat = mAuth.getCurrentUser();
         idUser = userConectat.getUid();
 
-        ivProfil = findViewById(R.id.ivProfile);
+
         ivReview = findViewById(R.id.ivReview);
 
     }
@@ -133,16 +165,45 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
                     }
                 });
     }
+    public void incarcaInfoProfile() {
+        reference.child(idUser)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        User user = snapshot.getValue(User.class);
+
+                        if (user != null) {
+                            String nume = user.getLastname();
+                            String prenume = user.getFirstname();
+                            String telefon=user.getPhoneNr();
+                            String email = user.getEmail();
+
+
+
+                            NumePetsitter.setText(nume);
+                            PrenumePetsitter.setText(prenume);
+                            NrTelPetsitter.setText(telefon);
+                            tvEmailUserConectat.setText(email);
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("preluarePetsitter", error.getMessage());
+                    }
+                });
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-
-            case R.id.ivProfile:
-                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                break;
+            case R.id.btn_edit:
+                //startActivity(new Intent(getApplicationContext(), EditProfileActivity.class));
+               break;
             case R.id.ivReview:
                 // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
                 break;
@@ -155,7 +216,7 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAuth.signOut();
-                        startActivity(new Intent(PetsitterHomeActivity.this, LoginActivity.class));
+                        startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
 
                         finish();
                     }
@@ -183,5 +244,8 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
         }
         return true;
     }
-}
 
+
+
+
+}
