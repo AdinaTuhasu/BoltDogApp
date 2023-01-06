@@ -175,7 +175,8 @@ public class DetailAnnouncementActivity extends AppCompatActivity implements Vie
         switch (view.getId()) {
 
             case R.id.ivProfile:
-                // startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                /*startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                finish();*/
                 break;
             case R.id.ivReview:
                 // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));

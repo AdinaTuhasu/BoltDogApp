@@ -92,6 +92,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 user=snapshot.getValue(User.class);
+                NumePetsitter.setText(user.getLastname());
+                PrenumePetsitter.setText(user.getFirstname());
+                NrTelPetsitter.setText(user.getPhoneNr());
+                EmailPetsitter.setText(user.getEmail());
             }
 
             @Override

@@ -173,7 +173,8 @@ public class ViewAnnouncementActivity extends AppCompatActivity implements View.
         switch (view.getId()) {
 
             case R.id.ivProfile:
-                // startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                finish();
                 break;
             case R.id.ivReview:
                 // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
