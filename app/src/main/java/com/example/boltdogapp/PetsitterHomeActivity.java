@@ -180,6 +180,10 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
                 startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
                 finish();
                 break;
+            case R.id.nav_status_request:
+                startActivity(new Intent(getApplicationContext(),StatusRequestActivity.class));
+                finish();
+                break;
 
         }
         return true;

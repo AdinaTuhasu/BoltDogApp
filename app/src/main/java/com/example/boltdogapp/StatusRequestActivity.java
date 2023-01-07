@@ -16,13 +16,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.boltdogapp.model.Announcement;
 import com.example.boltdogapp.model.Request;
 import com.example.boltdogapp.model.User;
 import com.google.android.material.navigation.NavigationView;
@@ -34,8 +32,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class DetailAnnouncementActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+import java.util.ArrayList;
 
+public class StatusRequestActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -56,29 +55,52 @@ public class DetailAnnouncementActivity extends AppCompatActivity implements Vie
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
-    Announcement announcement;
-    User user;
-    TextView ownername,petname,breed,age,description,address;
-    Button btnBack,btnApply, btnOwnerProfile;
+    private ListView listView;
+    private ArrayList<Request> arrayList= new ArrayList<>();
+    private StatusRequestAdapter requestAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_announcement);
-        Intent i=getIntent();
-        announcement=(Announcement) i.getSerializableExtra("announcement");
-        petname=findViewById(R.id.pet_name_ann);
-        ownername=findViewById(R.id.pet_ownername_ann);
-        breed=findViewById(R.id.pet_breed_ann);
-        age=findViewById(R.id.pet_age_ann);
-        description=findViewById(R.id.pet_description_ann);
-        address=findViewById(R.id.pet_address_ann);
-        petname.setText(announcement.getName());
-        ownername.setText(announcement.getOwnername());
-        breed.setText(announcement.getBreed());
-        String age1=Integer.toString(announcement.getAge());
-        age.setText(age1);
-        address.setText(announcement.getAddress());
-        description.setText(announcement.getDescripion());
+        setContentView(R.layout.activity_status_request);
+        listView=findViewById(R.id.status_requests_list);
+
+        reference.child("requests").addValueEventListener(new ValueEventListener() {
+            User user;
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
+                        user=snapshot2.getValue(User.class);
+                        for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                            Request request=dataSnapshot1.getValue(Request.class);
+//                    System.out.println(announcement);
+                            if(request.getPetsitter().equals(user.getFirstname()+" "+user.getLastname())){
+                                arrayList.add(request);
+                                requestAdapter.notifyDataSetChanged();
+                            }
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        requestAdapter= new StatusRequestAdapter(arrayList,StatusRequestActivity.this);
+
+        listView.setAdapter(requestAdapter);
+        requestAdapter.notifyDataSetChanged();
         initializeazaAtribute();
 
         seteazaToolbar();
@@ -91,20 +113,8 @@ public class DetailAnnouncementActivity extends AppCompatActivity implements Vie
         ivProfil.setOnClickListener(this);
         ivReview.setOnClickListener(this);
 
-        reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                user=snapshot.getValue(User.class);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         incarcaInfoNavMenu();
-
-
     }
 
 
@@ -175,8 +185,8 @@ public class DetailAnnouncementActivity extends AppCompatActivity implements Vie
         switch (view.getId()) {
 
             case R.id.ivProfile:
-                /*startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                finish();*/
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                finish();
                 break;
             case R.id.ivReview:
                 // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
@@ -190,7 +200,7 @@ public class DetailAnnouncementActivity extends AppCompatActivity implements Vie
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAuth.signOut();
-                        startActivity(new Intent(DetailAnnouncementActivity.this, LoginActivity.class));
+                        startActivity(new Intent(StatusRequestActivity.this, LoginActivity.class));
 
                         finish();
                     }
@@ -218,19 +228,7 @@ public class DetailAnnouncementActivity extends AppCompatActivity implements Vie
                 startActivity(new Intent(getApplicationContext(),StatusRequestActivity.class));
                 finish();
                 break;
-
         }
         return true;
-    }
-
-    public void backToAnnouncements(View view) {
-        startActivity(new Intent(DetailAnnouncementActivity.this,ViewAnnouncementActivity.class));
-        finish();
-    }
-
-    public void apply(View view) {
-        Request request=new Request(user.getFirstname()+" "+user.getLastname(),ownername.getText().toString(),petname.getText().toString(),"In asteptare");
-        reference.child("requests").child(announcement.getOwnername()).setValue(request);
-        Toast.makeText(DetailAnnouncementActivity.this,"Aplicarea a fost efectuata cu succes",Toast.LENGTH_SHORT).show();
     }
 }

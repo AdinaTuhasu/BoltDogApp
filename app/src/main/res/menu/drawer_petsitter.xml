@@ -6,8 +6,8 @@
         <item android:id="@+id/nav_view_announcements"
 
             android:title="Anunturi"/>
-        <item android:id="@+id/nav_logout"
-            android:title="Logout"></item>
+        <item android:id="@+id/nav_status_request"
+            android:title="Status cereri"></item>
 
     </group>
 

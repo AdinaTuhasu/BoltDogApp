@@ -211,7 +211,10 @@ public class ViewAnnouncementActivity extends AppCompatActivity implements View.
             case R.id.nav_view_announcements:
                 //startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
                 break;
-
+            case R.id.nav_status_request:
+                startActivity(new Intent(getApplicationContext(),StatusRequestActivity.class));
+                finish();
+                break;
         }
         return true;
     }

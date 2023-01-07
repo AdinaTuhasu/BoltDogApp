@@ -4,14 +4,23 @@ public class Request {
     String petsitter;
     String ownername;
     String petname;
-
-    public Request(String petsitter, String ownername, String petname) {
+    String status;
+    public Request(String petsitter, String ownername, String petname,String status) {
         this.petsitter = petsitter;
         this.ownername = ownername;
         this.petname = petname;
+        this.status=status;
     }
 
     public Request() {
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getPetsitter() {
