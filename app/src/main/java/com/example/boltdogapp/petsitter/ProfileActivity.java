@@ -1,4 +1,4 @@
-package com.example.boltdogapp;
+package com.example.boltdogapp.petsitter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -16,12 +16,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.boltdogapp.model.Request;
+import com.example.boltdogapp.R;
+import com.example.boltdogapp.authentification.LoginActivity;
 import com.example.boltdogapp.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,9 +33,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
-public class StatusRequestActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -49,58 +49,27 @@ public class StatusRequestActivity extends AppCompatActivity implements View.OnC
 
 
     private ImageView imageView;
-    private ImageView ivProfil, ivReview;
+    private ImageView  ivReview;
 
     private FirebaseUser userConectat;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
-    private ListView listView;
-    private ArrayList<Request> arrayList= new ArrayList<>();
-    private StatusRequestAdapter requestAdapter;
+
+    User user;
+    TextView NumePetsitter,PrenumePetsitter,NrTelPetsitter,EmailPetsitter;
+    Button btnEdit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_status_request);
-        listView=findViewById(R.id.status_requests_list);
+        setContentView(R.layout.activity_profile);
+        Intent i=getIntent();
 
-        reference.child("requests").addValueEventListener(new ValueEventListener() {
-            User user;
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
-                        user=snapshot2.getValue(User.class);
-                        for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
-                            Request request=dataSnapshot1.getValue(Request.class);
-//                    System.out.println(announcement);
-                            if(request.getPetsitter().equals(user.getFirstname()+" "+user.getLastname())){
-                                arrayList.add(request);
-                                requestAdapter.notifyDataSetChanged();
-                            }
-
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        requestAdapter= new StatusRequestAdapter(arrayList,StatusRequestActivity.this);
-
-        listView.setAdapter(requestAdapter);
-        requestAdapter.notifyDataSetChanged();
+        NumePetsitter=findViewById(R.id.numePetsitter);
+        PrenumePetsitter=findViewById(R.id.prenumePetsitter);
+        NrTelPetsitter=findViewById(R.id.telefonPetsitter);
+        EmailPetsitter=findViewById(R.id.emailPetsitter);
+        btnEdit=findViewById(R.id.btn_edit);
         initializeazaAtribute();
 
         seteazaToolbar();
@@ -110,11 +79,28 @@ public class StatusRequestActivity extends AppCompatActivity implements View.OnC
 
         navigationView.setNavigationItemSelectedListener(this);
         rlLogout.setOnClickListener(this);
-        ivProfil.setOnClickListener(this);
         ivReview.setOnClickListener(this);
+        btnEdit.setOnClickListener(this);
 
+        reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                user=snapshot.getValue(User.class);
+                NumePetsitter.setText(user.getLastname());
+                PrenumePetsitter.setText(user.getFirstname());
+                NrTelPetsitter.setText(user.getPhoneNr());
+                EmailPetsitter.setText(user.getEmail());
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         incarcaInfoNavMenu();
+        incarcaInfoProfile();
+
+
     }
 
 
@@ -143,7 +129,7 @@ public class StatusRequestActivity extends AppCompatActivity implements View.OnC
         userConectat = mAuth.getCurrentUser();
         idUser = userConectat.getUid();
 
-        ivProfil = findViewById(R.id.ivProfile);
+
         ivReview = findViewById(R.id.ivReview);
 
     }
@@ -177,16 +163,44 @@ public class StatusRequestActivity extends AppCompatActivity implements View.OnC
                     }
                 });
     }
+    public void incarcaInfoProfile() {
+        reference.child(idUser)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        User user = snapshot.getValue(User.class);
+
+                        if (user != null) {
+                            String nume = user.getLastname();
+                            String prenume = user.getFirstname();
+                            String telefon=user.getPhoneNr();
+                            String email = user.getEmail();
+
+
+
+                            NumePetsitter.setText(nume);
+                            PrenumePetsitter.setText(prenume);
+                            NrTelPetsitter.setText(telefon);
+                            tvEmailUserConectat.setText(email);
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("preluarePetsitter", error.getMessage());
+                    }
+                });
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-
-            case R.id.ivProfile:
-                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                finish();
+            case R.id.btn_edit:
+                startActivity(new Intent(getApplicationContext(), EditProfileActivity.class));
                 break;
             case R.id.ivReview:
                 startActivity(new Intent(getApplicationContext(), PetsitterReviewActivity.class));
@@ -200,7 +214,7 @@ public class StatusRequestActivity extends AppCompatActivity implements View.OnC
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAuth.signOut();
-                        startActivity(new Intent(StatusRequestActivity.this, LoginActivity.class));
+                        startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
 
                         finish();
                     }
@@ -221,14 +235,19 @@ public class StatusRequestActivity extends AppCompatActivity implements View.OnC
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_view_announcements:
-                startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
+                startActivity(new Intent(getApplicationContext(), ViewAnnouncementActivity.class));
                 finish();
                 break;
             case R.id.nav_status_request:
-                startActivity(new Intent(getApplicationContext(),StatusRequestActivity.class));
+                startActivity(new Intent(getApplicationContext(), StatusRequestActivity.class));
                 finish();
                 break;
+
         }
         return true;
     }
+
+
+
+
 }

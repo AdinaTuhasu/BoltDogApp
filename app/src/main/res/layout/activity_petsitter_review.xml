@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
-    tools:context=".PetsitterReviewActivity"
+    tools:context=".petsitter.PetsitterReviewActivity"
     tools:openDrawer="start">
 
     <RelativeLayout

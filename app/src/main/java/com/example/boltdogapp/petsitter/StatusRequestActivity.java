@@ -1,4 +1,4 @@
-package com.example.boltdogapp;
+package com.example.boltdogapp.petsitter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -21,7 +21,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.boltdogapp.model.Announcement;
+import com.example.boltdogapp.R;
+import com.example.boltdogapp.adapter.StatusRequestAdapter;
+import com.example.boltdogapp.authentification.LoginActivity;
+import com.example.boltdogapp.model.Request;
 import com.example.boltdogapp.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,8 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ViewAnnouncementActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
-
+public class StatusRequestActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -57,27 +59,40 @@ public class ViewAnnouncementActivity extends AppCompatActivity implements View.
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
     private ListView listView;
-    private ArrayList<Announcement> arrayList= new ArrayList<>();
-    private AnnouncementAdapter announcementAdapter;
-
-
+    private ArrayList<Request> arrayList= new ArrayList<>();
+    private StatusRequestAdapter requestAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_status_request);
+        listView=findViewById(R.id.status_requests_list);
 
-        setContentView(R.layout.activity_view_announcement);
-        listView=findViewById(R.id.announcements_list);
-        reference.child("announcements").addValueEventListener(new ValueEventListener() {
+        reference.child("requests").addValueEventListener(new ValueEventListener() {
+            User user;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
-                    Announcement request=dataSnapshot1.getValue(Announcement.class);
+                reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
+                        user=snapshot2.getValue(User.class);
+                        for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                            Request request=dataSnapshot1.getValue(Request.class);
 //                    System.out.println(announcement);
-//
-                    arrayList.add(request);
-                    announcementAdapter.notifyDataSetChanged();
+                            if(request.getPetsitter().equals(user.getFirstname()+" "+user.getLastname())){
+                                arrayList.add(request);
+                                requestAdapter.notifyDataSetChanged();
+                            }
 
-                }
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
             }
 
             @Override
@@ -85,10 +100,10 @@ public class ViewAnnouncementActivity extends AppCompatActivity implements View.
 
             }
         });
-        announcementAdapter= new AnnouncementAdapter(arrayList,ViewAnnouncementActivity.this);
+        requestAdapter= new StatusRequestAdapter(arrayList,StatusRequestActivity.this);
 
-        listView.setAdapter(announcementAdapter);
-        announcementAdapter.notifyDataSetChanged();
+        listView.setAdapter(requestAdapter);
+        requestAdapter.notifyDataSetChanged();
         initializeazaAtribute();
 
         seteazaToolbar();
@@ -178,6 +193,7 @@ public class ViewAnnouncementActivity extends AppCompatActivity implements View.
                 break;
             case R.id.ivReview:
                 startActivity(new Intent(getApplicationContext(), PetsitterReviewActivity.class));
+               finish();
                 break;
 
             case R.id.rlLogout:
@@ -188,7 +204,7 @@ public class ViewAnnouncementActivity extends AppCompatActivity implements View.
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAuth.signOut();
-                        startActivity(new Intent(ViewAnnouncementActivity.this, LoginActivity.class));
+                        startActivity(new Intent(StatusRequestActivity.this, LoginActivity.class));
 
                         finish();
                     }
@@ -209,7 +225,8 @@ public class ViewAnnouncementActivity extends AppCompatActivity implements View.
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_view_announcements:
-                startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
+                startActivity(new Intent(getApplicationContext(), ViewAnnouncementActivity.class));
+                finish();
                 break;
             case R.id.nav_status_request:
                 startActivity(new Intent(getApplicationContext(),StatusRequestActivity.class));

@@ -1,4 +1,4 @@
-package com.example.boltdogapp;
+package com.example.boltdogapp.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.example.boltdogapp.R;
 import com.example.boltdogapp.model.Announcement;
 import com.example.boltdogapp.model.Request;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,6 +59,9 @@ public class RequestAdapter extends BaseAdapter {
         view=inflater.inflate(R.layout.request_layout,viewGroup,false);
         petsitterName=view.findViewById(R.id.r_petsitter_name);
         petsitterName.setText(requestArrayList.get(i).getPetsitter());
+        btn_accenpt=view.findViewById(R.id.accept_button);
+        btn_reject=view.findViewById(R.id.reject_button);
+        btn_profile=view.findViewById(R.id.profile_button);
         btn_accenpt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

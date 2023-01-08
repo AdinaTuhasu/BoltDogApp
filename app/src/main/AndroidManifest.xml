@@ -10,49 +10,52 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BoltDogApp">
         <activity
-            android:name=".EditProfileOwnerActivity"
+            android:name=".owner.OwnerReviewActivity"
             android:exported="false" />
         <activity
-            android:name=".OwnerProfileActivity"
+            android:name=".owner.EditProfileOwnerActivity"
             android:exported="false" />
         <activity
-            android:name=".ReviewAdapter"
+            android:name=".owner.OwnerProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".PetsitterReviewActivity"
+            android:name=".adapter.ReviewAdapter"
             android:exported="false" />
         <activity
-            android:name=".StatusRequestActivity"
+            android:name=".petsitter.PetsitterReviewActivity"
             android:exported="false" />
         <activity
-            android:name=".EditProfileActivity"
+            android:name=".petsitter.StatusRequestActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".petsitter.EditProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".ViewAnnouncementActivity"
+            android:name=".petsitter.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".ViewRequests"
+            android:name=".petsitter.ViewAnnouncementActivity"
             android:exported="false" />
         <activity
-            android:name=".PetsitterHomeActivity"
+            android:name=".owner.ViewRequests"
             android:exported="false" />
         <activity
-            android:name=".addAnnouncementActivity"
+            android:name=".petsitter.PetsitterHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".OwnerHomeActivity2"
+            android:name=".owner.addAnnouncementActivity"
             android:exported="false" />
         <activity
-            android:name=".DetailAnnouncementActivity"
+            android:name=".owner.OwnerHomeActivity2"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".petsitter.DetailAnnouncementActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".authentification.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".authentification.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

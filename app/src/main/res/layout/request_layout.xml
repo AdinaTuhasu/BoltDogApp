@@ -28,6 +28,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:text="Accepta"
 
             android:id="@+id/accept_button">

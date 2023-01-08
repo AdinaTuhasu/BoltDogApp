@@ -1,4 +1,4 @@
-package com.example.boltdogapp;
+package com.example.boltdogapp.authentification;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.boltdogapp.owner.OwnerHomeActivity2;
+import com.example.boltdogapp.petsitter.PetsitterHomeActivity;
+import com.example.boltdogapp.R;
 import com.example.boltdogapp.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -64,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                                             startActivity(new Intent(LoginActivity.this, PetsitterHomeActivity.class));
                                             finish();
                                         } else {
-                                            startActivity(new Intent(LoginActivity.this,OwnerHomeActivity2.class));
+                                            startActivity(new Intent(LoginActivity.this, OwnerHomeActivity2.class));
                                             finish();
                                         }
                                     }

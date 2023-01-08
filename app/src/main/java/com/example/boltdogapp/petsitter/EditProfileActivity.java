@@ -1,4 +1,4 @@
-package com.example.boltdogapp;
+package com.example.boltdogapp.petsitter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -11,7 +11,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +23,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.boltdogapp.model.Announcement;
+import com.example.boltdogapp.R;
+import com.example.boltdogapp.authentification.LoginActivity;
 import com.example.boltdogapp.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -222,8 +222,9 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 //finish();
                 break;
             case R.id.ivReview:
-                // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
-                break;
+                 startActivity(new Intent(getApplicationContext(), PetsitterReviewActivity.class));
+                finish();
+                 break;
 
             case R.id.rlLogout:
                 AlertDialog.Builder builder= new AlertDialog.Builder(this);
@@ -254,11 +255,11 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_view_announcements:
-                startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
+                startActivity(new Intent(getApplicationContext(), ViewAnnouncementActivity.class));
                 finish();
                 break;
             case R.id.nav_status_request:
-                startActivity(new Intent(getApplicationContext(),StatusRequestActivity.class));
+                startActivity(new Intent(getApplicationContext(), StatusRequestActivity.class));
                 finish();
                 break;
 

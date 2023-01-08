@@ -1,4 +1,4 @@
-package com.example.boltdogapp;
+package com.example.boltdogapp.petsitter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -11,7 +11,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.hardware.usb.UsbRequest;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,8 +21,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.boltdogapp.R;
+import com.example.boltdogapp.adapter.AnnouncementAdapter;
+import com.example.boltdogapp.authentification.LoginActivity;
 import com.example.boltdogapp.model.Announcement;
-import com.example.boltdogapp.model.Request;
 import com.example.boltdogapp.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ViewRequests extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class ViewAnnouncementActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -52,48 +53,34 @@ public class ViewRequests extends AppCompatActivity implements View.OnClickListe
 
 
     private ImageView imageView;
-    private ImageView ivProfil,ivReview;
+    private ImageView ivProfil, ivReview;
 
     private FirebaseUser userConectat;
-    FirebaseAuth mAuth=FirebaseAuth.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
     private ListView listView;
-    private ArrayList<Request> arrayList= new ArrayList<>();
-    private RequestAdapter requestAdapter;
+    private ArrayList<Announcement> arrayList= new ArrayList<>();
+    private AnnouncementAdapter announcementAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_requests);
-        listView=findViewById(R.id.requests_list);
 
-        reference.child("requests").addValueEventListener(new ValueEventListener() {
-            User user;
+        setContentView(R.layout.activity_view_announcement);
+        listView=findViewById(R.id.announcements_list);
+        reference.child("announcements").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot2) {
-                        user=snapshot2.getValue(User.class);
-                        for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
-                            Request request=dataSnapshot1.getValue(Request.class);
+                for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                    Announcement request=dataSnapshot1.getValue(Announcement.class);
 //                    System.out.println(announcement);
-                            if(request.getOwnername().equals(user.getLastname()+" "+user.getFirstname())){
-                                arrayList.add(request);
-                                requestAdapter.notifyDataSetChanged();
-                            }
+//
+                    arrayList.add(request);
+                    announcementAdapter.notifyDataSetChanged();
 
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
+                }
             }
 
             @Override
@@ -101,16 +88,15 @@ public class ViewRequests extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-        requestAdapter= new RequestAdapter(arrayList,ViewRequests.this);
+        announcementAdapter= new AnnouncementAdapter(arrayList,ViewAnnouncementActivity.this);
 
-        listView.setAdapter(requestAdapter);
-        requestAdapter.notifyDataSetChanged();
+        listView.setAdapter(announcementAdapter);
+        announcementAdapter.notifyDataSetChanged();
         initializeazaAtribute();
 
         seteazaToolbar();
 
         seteazaToggle();
-
 
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -124,7 +110,7 @@ public class ViewRequests extends AppCompatActivity implements View.OnClickListe
 
 
     private void seteazaToggle() {
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
@@ -149,10 +135,9 @@ public class ViewRequests extends AppCompatActivity implements View.OnClickListe
         idUser = userConectat.getUid();
 
         ivProfil = findViewById(R.id.ivProfile);
-        ivReview= findViewById(R.id.ivReview);
+        ivReview = findViewById(R.id.ivReview);
 
     }
-
 
 
     public void incarcaInfoNavMenu() {
@@ -166,7 +151,7 @@ public class ViewRequests extends AppCompatActivity implements View.OnClickListe
                             String nume = user.getLastname();
                             String prenume = user.getFirstname();
                             numeComplet = nume + " " + prenume;
-                            String email =user.getEmail();
+                            String email = user.getEmail();
 
 
                             tvNumeUserConectat.setText(numeComplet);
@@ -179,7 +164,7 @@ public class ViewRequests extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("preluareOwner", error.getMessage());
+                        Log.e("preluarePetsitter", error.getMessage());
                     }
                 });
     }
@@ -191,11 +176,12 @@ public class ViewRequests extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
 
             case R.id.ivProfile:
-                /*startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                finish();*/
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                finish();
                 break;
             case R.id.ivReview:
-                // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
+                startActivity(new Intent(getApplicationContext(), PetsitterReviewActivity.class));
+               finish();
                 break;
 
             case R.id.rlLogout:
@@ -206,7 +192,7 @@ public class ViewRequests extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAuth.signOut();
-                        startActivity(new Intent(ViewRequests.this, LoginActivity.class));
+                        startActivity(new Intent(ViewAnnouncementActivity.this, LoginActivity.class));
 
                         finish();
                     }
@@ -226,11 +212,12 @@ public class ViewRequests extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_add_announcements:
-                startActivity(new Intent(getApplicationContext(),addAnnouncementActivity.class));
+            case R.id.nav_view_announcements:
+                startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
                 break;
-            case R.id.nav_view_requests:
-                startActivity(new Intent(getApplicationContext(),ViewRequests.class));
+            case R.id.nav_status_request:
+                startActivity(new Intent(getApplicationContext(), StatusRequestActivity.class));
+                finish();
                 break;
         }
         return true;

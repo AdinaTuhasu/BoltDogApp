@@ -1,31 +1,34 @@
-package com.example.boltdogapp;
+package com.example.boltdogapp.petsitter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.view.View;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.boltdogapp.model.Announcement;
+import com.example.boltdogapp.R;
+import com.example.boltdogapp.adapter.ReviewAdapter;
+import com.example.boltdogapp.authentification.LoginActivity;
+import com.example.boltdogapp.model.Review;
 import com.example.boltdogapp.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,10 +38,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-public class addAnnouncementActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+import java.util.ArrayList;
+
+public class PetsitterReviewActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -50,100 +54,94 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
 
     private TextView tvNumeUserConectat;
     private TextView tvEmailUserConectat;
+    private EditText et_add_review;
+    private Button btn_add;
 
-
-
-    private ImageView ivProfil,ivReview;
-
-    private FirebaseUser userConectat;
-    FirebaseAuth mAuth=FirebaseAuth.getInstance();
-    DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
-    private String numeComplet;
-    private EditText petName;
-    private EditText petBreed;
-    private EditText petAge;
-    private EditText petDescription;
-    private EditText petAddress;
-    private User user;
-
-
-    private Button addButton;
-    private Button openCamera;
-    private Uri imgUri;
 
     private ImageView imageView;
+    private ImageView ivProfil;
+    Button btn_add_review;
+
+    private FirebaseUser userConectat;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
+    private String numeComplet;
+    private ListView listView;
+    private ArrayList<Review> arrayList= new ArrayList<>();
+    private ReviewAdapter reviewAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_announcement);
-        petName=findViewById(R.id.pet_name);
-        petAddress=findViewById(R.id.pet_address);
-        petBreed=findViewById(R.id.pet_breed);
-        petAge=findViewById(R.id.pet_age);
-        petDescription=findViewById(R.id.pet_description);
-        imageView=findViewById(R.id.pet_image);
-        imgUri=Uri.parse(imageView.toString());
-        openCamera=findViewById(R.id.open_camera);
+        setContentView(R.layout.activity_petsitter_review);
+        listView=findViewById(R.id.reviews_list);
+        btn_add_review=findViewById(R.id.btn_review);
+        et_add_review=findViewById(R.id.p_add_review);
+        btn_add=findViewById(R.id.button_add_review);
+        et_add_review.setVisibility(View.INVISIBLE);
+        btn_add.setVisibility(View.INVISIBLE);
+        btn_add_review.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                et_add_review.setVisibility(View.VISIBLE);
+                btn_add.setVisibility(View.VISIBLE);
+
+            }
+        });
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        User user=snapshot.getValue(User.class);
+                        Review review=new Review(user.getUsername(),et_add_review.getText().toString());
+                        reference.child("review").child(user.getUsername()).setValue(review);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+        });
+        reference.child("review").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                    Review review=dataSnapshot1.getValue(Review.class);
+//                    System.out.println(announcement);
+//
+                    arrayList.add(review);
+                    reviewAdapter.notifyDataSetChanged();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        reviewAdapter= new ReviewAdapter(arrayList,PetsitterReviewActivity.this);
+
+        listView.setAdapter(reviewAdapter);
+        reviewAdapter.notifyDataSetChanged();
         initializeazaAtribute();
 
         seteazaToolbar();
 
         seteazaToggle();
 
-        addButton=findViewById(R.id.add_announce);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name=petName.getText().toString();
-                int age=Integer.parseInt(petAge.getText().toString());
-                String breed=petBreed.getText().toString();
-                String description=petDescription.getText().toString();
-                String address=petAddress.getText().toString();
-                String ownername=user.getLastname()+" "+user.getFirstname();
-                Announcement announcement=new Announcement(ownername,name,breed,age,description,address);
-
-                reference.child("announcements").child(user.getLastname()+" "+user.getFirstname()+" "+name).setValue(announcement);
-                Toast.makeText(addAnnouncementActivity.this, "Anunt adaugat cu succes!", Toast.LENGTH_SHORT).show();
-
-
-
-
-                /*StorageReference fileReference= storageReference.child(name+".png");
-                UploadTask uploadTask= fileReference.putFile(imgUri);
-                // databaseReference.child("users").child(mAuth.getCurrentUser().getUid()).child("url").setValue(fileReference.getDownloadUrl());
-                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
-                        // Continue with the task to get the download URL
-                        return fileReference.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            Uri downloadUri = task.getResult();
-//                            mydb.child("announcements").child(mAuth.getCurrentUser().getUid()).child("url").setValue(downloadUri.toString());
-//                            announcement.setPhotoUrl(downloadUri.toString());
-                            Announcement announcement=new Announcement(ownername,name,breed,age,description,address);
-                            mydb.child("announcements").child(user.getLastname()+" "+user.getFirstname()+" "+name).setValue(announcement);
-                        } else {
-                            // Handle failures
-                            // ...
-                        }
-                    }
-                });*/
-
-
-            }
-        });
 
         navigationView.setNavigationItemSelectedListener(this);
         rlLogout.setOnClickListener(this);
         ivProfil.setOnClickListener(this);
-        ivReview.setOnClickListener(this);
+
 
 
         incarcaInfoNavMenu();
@@ -151,7 +149,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
 
 
     private void seteazaToggle() {
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
@@ -176,10 +174,9 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
         idUser = userConectat.getUid();
 
         ivProfil = findViewById(R.id.ivProfile);
-        ivReview= findViewById(R.id.ivReview);
+
 
     }
-
 
 
     public void incarcaInfoNavMenu() {
@@ -193,7 +190,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
                             String nume = user.getLastname();
                             String prenume = user.getFirstname();
                             numeComplet = nume + " " + prenume;
-                            String email =user.getEmail();
+                            String email = user.getEmail();
 
 
                             tvNumeUserConectat.setText(numeComplet);
@@ -206,7 +203,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("preluareOwner", error.getMessage());
+                        Log.e("preluarePetsitter", error.getMessage());
                     }
                 });
     }
@@ -218,12 +215,10 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
         switch (view.getId()) {
 
             case R.id.ivProfile:
-               // startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-               // finish();
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                finish();
                 break;
-            case R.id.ivReview:
-                // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
-                break;
+
 
             case R.id.rlLogout:
                 AlertDialog.Builder builder= new AlertDialog.Builder(this);
@@ -233,7 +228,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAuth.signOut();
-                        startActivity(new Intent(addAnnouncementActivity.this, LoginActivity.class));
+                        startActivity(new Intent(PetsitterReviewActivity.this, LoginActivity.class));
 
                         finish();
                     }
@@ -253,11 +248,12 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_add_announcements:
-                startActivity(new Intent(getApplicationContext(),addAnnouncementActivity.class));
+            case R.id.nav_view_announcements:
+                startActivity(new Intent(getApplicationContext(), ViewAnnouncementActivity.class));
                 break;
-            case R.id.nav_view_requests:
-                startActivity(new Intent(getApplicationContext(),ViewRequests.class));
+            case R.id.nav_status_request:
+                startActivity(new Intent(getApplicationContext(), StatusRequestActivity.class));
+                finish();
                 break;
         }
         return true;

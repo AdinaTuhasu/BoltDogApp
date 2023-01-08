@@ -1,4 +1,4 @@
-package com.example.boltdogapp;
+package com.example.boltdogapp.petsitter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -16,10 +16,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.boltdogapp.R;
+import com.example.boltdogapp.authentification.LoginActivity;
+import com.example.boltdogapp.model.Announcement;
+import com.example.boltdogapp.model.Request;
 import com.example.boltdogapp.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +36,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class PetsitterHomeActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class DetailAnnouncementActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -51,12 +58,29 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
-
+    Announcement announcement;
+    User user;
+    TextView ownername,petname,breed,age,description,address;
+    Button btnBack,btnApply, btnOwnerProfile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_petsitter_home);
-
+        setContentView(R.layout.activity_detail_announcement);
+        Intent i=getIntent();
+        announcement=(Announcement) i.getSerializableExtra("announcement");
+        petname=findViewById(R.id.pet_name_ann);
+        ownername=findViewById(R.id.pet_ownername_ann);
+        breed=findViewById(R.id.pet_breed_ann);
+        age=findViewById(R.id.pet_age_ann);
+        description=findViewById(R.id.pet_description_ann);
+        address=findViewById(R.id.pet_address_ann);
+        petname.setText(announcement.getName());
+        ownername.setText(announcement.getOwnername());
+        breed.setText(announcement.getBreed());
+        String age1=Integer.toString(announcement.getAge());
+        age.setText(age1);
+        address.setText(announcement.getAddress());
+        description.setText(announcement.getDescripion());
         initializeazaAtribute();
 
         seteazaToolbar();
@@ -69,8 +93,20 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
         ivProfil.setOnClickListener(this);
         ivReview.setOnClickListener(this);
 
+        reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                user=snapshot.getValue(User.class);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         incarcaInfoNavMenu();
+
+
     }
 
 
@@ -145,7 +181,7 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
                 finish();
                 break;
             case R.id.ivReview:
-                startActivity(new Intent(getApplicationContext(), PetsitterReviewActivity.class));
+                 startActivity(new Intent(getApplicationContext(), PetsitterReviewActivity.class));
                 break;
 
             case R.id.rlLogout:
@@ -156,7 +192,7 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAuth.signOut();
-                        startActivity(new Intent(PetsitterHomeActivity.this, LoginActivity.class));
+                        startActivity(new Intent(DetailAnnouncementActivity.this, LoginActivity.class));
 
                         finish();
                     }
@@ -177,16 +213,26 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_view_announcements:
-                startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
+                startActivity(new Intent(getApplicationContext(), ViewAnnouncementActivity.class));
                 finish();
                 break;
             case R.id.nav_status_request:
-                startActivity(new Intent(getApplicationContext(),StatusRequestActivity.class));
+                startActivity(new Intent(getApplicationContext(), StatusRequestActivity.class));
                 finish();
                 break;
 
         }
         return true;
     }
-}
 
+    public void backToAnnouncements(View view) {
+        startActivity(new Intent(DetailAnnouncementActivity.this,ViewAnnouncementActivity.class));
+        finish();
+    }
+
+    public void apply(View view) {
+        Request request=new Request(user.getFirstname()+" "+user.getLastname(),ownername.getText().toString(),petname.getText().toString(),"In asteptare");
+        reference.child("requests").child(announcement.getOwnername()).setValue(request);
+        Toast.makeText(DetailAnnouncementActivity.this,"Aplicarea a fost efectuata cu succes",Toast.LENGTH_SHORT).show();
+    }
+}

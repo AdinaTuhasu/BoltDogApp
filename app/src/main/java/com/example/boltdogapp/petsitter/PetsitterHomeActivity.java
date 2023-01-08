@@ -1,4 +1,4 @@
-package com.example.boltdogapp;
+package com.example.boltdogapp.petsitter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -16,13 +16,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.boltdogapp.R;
+import com.example.boltdogapp.authentification.LoginActivity;
 import com.example.boltdogapp.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class EditProfileOwnerActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class PetsitterHomeActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -47,32 +46,18 @@ public class EditProfileOwnerActivity extends AppCompatActivity implements View.
     private TextView tvEmailUserConectat;
 
 
-
-    private ImageView ivProfil,ivReview;
+    private ImageView imageView;
+    private ImageView ivProfil, ivReview;
 
     private FirebaseUser userConectat;
-    FirebaseAuth mAuth=FirebaseAuth.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
-    private EditText ownerLastname;
-    private EditText ownerFirstname;
-    private EditText ownerPhone;
-    private EditText ownerEmail;
-    private User user;
 
-
-    private Button btn_save;
-    private ImageView imageView;
-    private ImageView imageProfile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile_owner);
-        ownerLastname=findViewById(R.id.owner_lastname);
-        ownerFirstname=findViewById(R.id.owner_firstname);
-        ownerPhone=findViewById(R.id.owner_phone);
-        ownerEmail=findViewById(R.id.owner_email);
-        imageView=findViewById(R.id.imgProfileOwner);
+        setContentView(R.layout.activity_petsitter_home);
 
         initializeazaAtribute();
 
@@ -80,62 +65,6 @@ public class EditProfileOwnerActivity extends AppCompatActivity implements View.
 
         seteazaToggle();
 
-        btn_save=findViewById(R.id.save_owner_profile);
-        btn_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String lastname1=ownerLastname.getText().toString();
-                String firstname1=ownerFirstname.getText().toString();
-                String phone1=ownerPhone.getText().toString();
-                String email1=ownerEmail.getText().toString();
-
-
-
-
-
-
-                reference.child("users").child(mAuth.getCurrentUser().getUid()).child("firstname").setValue(firstname1);
-                reference.child("users").child(mAuth.getCurrentUser().getUid()).child("lastname").setValue(lastname1);
-                reference.child("users").child(mAuth.getCurrentUser().getUid()).child("email").setValue(email1);
-                reference.child("users").child(mAuth.getCurrentUser().getUid()).child("phoneNr").setValue(phone1);
-
-
-                Toast.makeText(EditProfileOwnerActivity.this, "Informatii salvate cu succes!", Toast.LENGTH_SHORT).show();
-
-
-
-
-                /*StorageReference fileReference= storageReference.child(name+".png");
-                UploadTask uploadTask= fileReference.putFile(imgUri);
-                // databaseReference.child("users").child(mAuth.getCurrentUser().getUid()).child("url").setValue(fileReference.getDownloadUrl());
-                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
-                        // Continue with the task to get the download URL
-                        return fileReference.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            Uri downloadUri = task.getResult();
-//                            mydb.child("announcements").child(mAuth.getCurrentUser().getUid()).child("url").setValue(downloadUri.toString());
-//                            announcement.setPhotoUrl(downloadUri.toString());
-                            Announcement announcement=new Announcement(ownername,name,breed,age,description,address);
-                            mydb.child("announcements").child(user.getLastname()+" "+user.getFirstname()+" "+name).setValue(announcement);
-                        } else {
-                            // Handle failures
-                            // ...
-                        }
-                    }
-                });*/
-
-
-            }
-        });
 
         navigationView.setNavigationItemSelectedListener(this);
         rlLogout.setOnClickListener(this);
@@ -148,7 +77,7 @@ public class EditProfileOwnerActivity extends AppCompatActivity implements View.
 
 
     private void seteazaToggle() {
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
@@ -172,12 +101,10 @@ public class EditProfileOwnerActivity extends AppCompatActivity implements View.
         userConectat = mAuth.getCurrentUser();
         idUser = userConectat.getUid();
 
-
-        ivProfil=findViewById(R.id.ivProfile);
-        ivReview= findViewById(R.id.ivReview);
+        ivProfil = findViewById(R.id.ivProfile);
+        ivReview = findViewById(R.id.ivReview);
 
     }
-
 
 
     public void incarcaInfoNavMenu() {
@@ -191,7 +118,7 @@ public class EditProfileOwnerActivity extends AppCompatActivity implements View.
                             String nume = user.getLastname();
                             String prenume = user.getFirstname();
                             numeComplet = nume + " " + prenume;
-                            String email =user.getEmail();
+                            String email = user.getEmail();
 
 
                             tvNumeUserConectat.setText(numeComplet);
@@ -204,7 +131,7 @@ public class EditProfileOwnerActivity extends AppCompatActivity implements View.
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("preluareOwner", error.getMessage());
+                        Log.e("preluarePetsitter", error.getMessage());
                     }
                 });
     }
@@ -216,11 +143,11 @@ public class EditProfileOwnerActivity extends AppCompatActivity implements View.
         switch (view.getId()) {
 
             case R.id.ivProfile:
-                startActivity(new Intent(getApplicationContext(), OwnerProfileActivity.class));
-                //finish();
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                finish();
                 break;
             case R.id.ivReview:
-                // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
+                startActivity(new Intent(getApplicationContext(), PetsitterReviewActivity.class));
                 break;
 
             case R.id.rlLogout:
@@ -231,7 +158,7 @@ public class EditProfileOwnerActivity extends AppCompatActivity implements View.
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAuth.signOut();
-                        startActivity(new Intent(EditProfileOwnerActivity.this, LoginActivity.class));
+                        startActivity(new Intent(PetsitterHomeActivity.this, LoginActivity.class));
 
                         finish();
                     }
@@ -251,15 +178,17 @@ public class EditProfileOwnerActivity extends AppCompatActivity implements View.
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_add_announcements:
-                startActivity(new Intent(getApplicationContext(),addAnnouncementActivity.class));
+            case R.id.nav_view_announcements:
+                startActivity(new Intent(getApplicationContext(), ViewAnnouncementActivity.class));
+                finish();
                 break;
-            case R.id.nav_view_requests:
-                startActivity(new Intent(getApplicationContext(),ViewRequests.class));
+            case R.id.nav_status_request:
+                startActivity(new Intent(getApplicationContext(), StatusRequestActivity.class));
+                finish();
                 break;
+
         }
         return true;
     }
-
-
 }
+

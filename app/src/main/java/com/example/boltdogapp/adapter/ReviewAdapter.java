@@ -1,4 +1,4 @@
-package com.example.boltdogapp;
+package com.example.boltdogapp.adapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.boltdogapp.R;
 import com.example.boltdogapp.model.Announcement;
 import com.example.boltdogapp.model.Review;
 import com.google.firebase.database.DatabaseReference;
