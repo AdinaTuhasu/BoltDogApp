@@ -51,7 +51,7 @@
         <ListView
             android:layout_marginTop="60dp"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="wrap_content"
             android:id="@+id/reviews_list"
             >
 
@@ -62,7 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginEnd="50dp"
-            android:layout_marginTop="20dp"
             android:layout_below="@+id/reviews_list"
             android:backgroundTint="@color/red"
             android:text="Adauga feedback"
