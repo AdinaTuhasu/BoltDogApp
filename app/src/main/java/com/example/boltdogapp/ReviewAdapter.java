@@ -52,7 +52,7 @@ public class ReviewAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         LayoutInflater inflater=(LayoutInflater)  context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view=inflater.inflate(R.layout.announcement_layout,viewGroup,false);
+        view=inflater.inflate(R.layout.review_layout,viewGroup,false);
         petsitterName=view.findViewById(R.id.p_name);
         feedback=view.findViewById(R.id.feedback_petsitter);
 

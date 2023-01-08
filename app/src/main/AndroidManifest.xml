@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BoltDogApp">
         <activity
+            android:name=".EditProfileOwnerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OwnerProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".ReviewAdapter"
             android:exported="false" />
         <activity

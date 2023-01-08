@@ -177,7 +177,7 @@ public class ViewAnnouncementActivity extends AppCompatActivity implements View.
                 finish();
                 break;
             case R.id.ivReview:
-                // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
+                startActivity(new Intent(getApplicationContext(), PetsitterReviewActivity.class));
                 break;
 
             case R.id.rlLogout:
@@ -209,7 +209,7 @@ public class ViewAnnouncementActivity extends AppCompatActivity implements View.
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_view_announcements:
-                //startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
+                startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
                 break;
             case R.id.nav_status_request:
                 startActivity(new Intent(getApplicationContext(),StatusRequestActivity.class));

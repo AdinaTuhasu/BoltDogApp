@@ -209,7 +209,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(new Intent(getApplicationContext(), EditProfileActivity.class));
                 break;
             case R.id.ivReview:
-                // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
+                startActivity(new Intent(getApplicationContext(), PetsitterReviewActivity.class));
                 break;
 
             case R.id.rlLogout:

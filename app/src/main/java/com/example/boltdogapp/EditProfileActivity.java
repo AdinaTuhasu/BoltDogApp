@@ -253,12 +253,15 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_add_announcements:
-                startActivity(new Intent(getApplicationContext(),addAnnouncementActivity.class));
+            case R.id.nav_view_announcements:
+                startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
+                finish();
                 break;
-            case R.id.nav_view_requests:
-                startActivity(new Intent(getApplicationContext(),ViewRequests.class));
+            case R.id.nav_status_request:
+                startActivity(new Intent(getApplicationContext(),StatusRequestActivity.class));
+                finish();
                 break;
+
         }
         return true;
     }

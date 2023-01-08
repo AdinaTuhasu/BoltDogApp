@@ -2,16 +2,6 @@ package com.example.boltdogapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import android.annotation.SuppressLint;
-import android.os.Build;
-import android.os.Bundle;
-import android.view.View;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,14 +17,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.boltdogapp.model.Announcement;
-import com.example.boltdogapp.model.Review;
 import com.example.boltdogapp.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,11 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
-import com.google.android.material.navigation.NavigationView;
-
-public class PetsitterReviewActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class OwnerProfileActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
@@ -62,83 +44,30 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
 
     private TextView tvNumeUserConectat;
     private TextView tvEmailUserConectat;
-    private EditText et_add_review;
-    private Button btn_add;
 
 
     private ImageView imageView;
-    private ImageView ivProfil;
-    Button btn_add_review;
+    private ImageView  ivReview;
 
     private FirebaseUser userConectat;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
-    private ListView listView;
-    private ArrayList<Review> arrayList= new ArrayList<>();
-    private ReviewAdapter reviewAdapter;
 
-
+    User user;
+    TextView NumeOwner,PrenumeOwner,NrTelOwner,EmailOwner;
+    Button btnEditProfileOwner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_petsitter_review);
-        listView=findViewById(R.id.reviews_list);
-        btn_add_review=findViewById(R.id.btn_review);
-        et_add_review=findViewById(R.id.p_add_review);
-        btn_add=findViewById(R.id.button_add_review);
-        et_add_review.setVisibility(View.INVISIBLE);
-        btn_add.setVisibility(View.INVISIBLE);
-        btn_add_review.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                et_add_review.setVisibility(View.VISIBLE);
-                btn_add.setVisibility(View.VISIBLE);
+        setContentView(R.layout.activity_owner_profile);
+        Intent i=getIntent();
 
-            }
-        });
-        btn_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        User user=snapshot.getValue(User.class);
-                        Review review=new Review(user.getUsername(),et_add_review.getText().toString());
-                        reference.child("review").child(user.getUsername()).setValue(review);
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-            }
-        });
-        reference.child("review").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
-                    Review review=dataSnapshot1.getValue(Review.class);
-//                    System.out.println(announcement);
-//
-                    arrayList.add(review);
-                    reviewAdapter.notifyDataSetChanged();
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        reviewAdapter= new ReviewAdapter(arrayList,PetsitterReviewActivity.this);
-
-        listView.setAdapter(reviewAdapter);
-        reviewAdapter.notifyDataSetChanged();
+        NumeOwner=findViewById(R.id.numeOwner);
+        PrenumeOwner=findViewById(R.id.prenumeOwner);
+        NrTelOwner=findViewById(R.id.telefonOwner);
+        EmailOwner=findViewById(R.id.emailOwner);
+        btnEditProfileOwner=findViewById(R.id.btn_edit_profile_owner);
         initializeazaAtribute();
 
         seteazaToolbar();
@@ -148,11 +77,28 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
 
         navigationView.setNavigationItemSelectedListener(this);
         rlLogout.setOnClickListener(this);
-        ivProfil.setOnClickListener(this);
+        ivReview.setOnClickListener(this);
+        btnEditProfileOwner.setOnClickListener(this);
 
+        reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                user=snapshot.getValue(User.class);
+                NumeOwner.setText(user.getLastname());
+                PrenumeOwner.setText(user.getFirstname());
+                NrTelOwner.setText(user.getPhoneNr());
+                EmailOwner.setText(user.getEmail());
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
         incarcaInfoNavMenu();
+        incarcaInfoProfile();
+
+
     }
 
 
@@ -181,8 +127,8 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
         userConectat = mAuth.getCurrentUser();
         idUser = userConectat.getUid();
 
-        ivProfil = findViewById(R.id.ivProfile);
 
+        ivReview = findViewById(R.id.ivReview);
 
     }
 
@@ -215,18 +161,48 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
                     }
                 });
     }
+    public void incarcaInfoProfile() {
+        reference.child(idUser)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        User user = snapshot.getValue(User.class);
+
+                        if (user != null) {
+                            String nume = user.getLastname();
+                            String prenume = user.getFirstname();
+                            String telefon=user.getPhoneNr();
+                            String email = user.getEmail();
+
+
+
+                            NumeOwner.setText(nume);
+                            PrenumeOwner.setText(prenume);
+                            NrTelOwner.setText(telefon);
+                            tvEmailUserConectat.setText(email);
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("preluarePetsitter", error.getMessage());
+                    }
+                });
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-
-            case R.id.ivProfile:
-                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                finish();
+            case R.id.btn_edit_profile_owner:
+                startActivity(new Intent(getApplicationContext(), EditProfileOwnerActivity.class));
                 break;
-
+            case R.id.ivReview:
+               // startActivity(new Intent(getApplicationContext(), PetsitterReviewActivity.class));
+                break;
 
             case R.id.rlLogout:
                 AlertDialog.Builder builder= new AlertDialog.Builder(this);
@@ -236,7 +212,7 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAuth.signOut();
-                        startActivity(new Intent(PetsitterReviewActivity.this, LoginActivity.class));
+                        startActivity(new Intent(OwnerProfileActivity.this, LoginActivity.class));
 
                         finish();
                     }
@@ -256,14 +232,18 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_view_announcements:
-                startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
+            case R.id.nav_add_announcements:
+                startActivity(new Intent(getApplicationContext(),addAnnouncementActivity.class));
                 break;
-            case R.id.nav_status_request:
-                startActivity(new Intent(getApplicationContext(),StatusRequestActivity.class));
-                finish();
+            case R.id.nav_view_requests:
+                startActivity(new Intent(getApplicationContext(),ViewRequests.class));
                 break;
+
         }
         return true;
     }
+
+
+
+
 }

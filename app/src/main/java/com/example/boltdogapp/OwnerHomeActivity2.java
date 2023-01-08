@@ -149,8 +149,8 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
         switch (view.getId()) {
 
             case R.id.ivProfile:
-                /*startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                finish();*/
+                startActivity(new Intent(getApplicationContext(), OwnerProfileActivity.class));
+                finish();
                 break;
             case R.id.ivReview:
                 // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));

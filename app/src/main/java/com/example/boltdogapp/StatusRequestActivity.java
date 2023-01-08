@@ -189,7 +189,7 @@ public class StatusRequestActivity extends AppCompatActivity implements View.OnC
                 finish();
                 break;
             case R.id.ivReview:
-                // startActivity(new Intent(getApplicationContext(), ReviewActivity.class));
+                startActivity(new Intent(getApplicationContext(), PetsitterReviewActivity.class));
                 break;
 
             case R.id.rlLogout:
