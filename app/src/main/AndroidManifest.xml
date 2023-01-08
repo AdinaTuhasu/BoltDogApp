@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BoltDogApp">
         <activity
+            android:name=".ReviewAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".PetsitterReviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".StatusRequestActivity"
             android:exported="false" />
         <activity

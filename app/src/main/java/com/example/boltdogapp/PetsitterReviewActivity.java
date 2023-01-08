@@ -2,6 +2,16 @@ package com.example.boltdogapp;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import android.annotation.SuppressLint;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,10 +26,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.boltdogapp.model.Announcement;
+import com.example.boltdogapp.model.Review;
 import com.example.boltdogapp.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +45,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class PetsitterHomeActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+import java.util.ArrayList;
+
+import com.google.android.material.navigation.NavigationView;
+
+public class PetsitterReviewActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -45,18 +65,52 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
 
 
     private ImageView imageView;
-    private ImageView ivProfil, ivReview;
+    private ImageView ivProfil;
+    Button btn_add_review;
 
     private FirebaseUser userConectat;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
+    private ListView listView;
+    private ArrayList<Review> arrayList= new ArrayList<>();
+    private ReviewAdapter reviewAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_petsitter_home);
+        setContentView(R.layout.activity_petsitter_review);
+        listView=findViewById(R.id.reviews_list);
+        btn_add_review=findViewById(R.id.btn_review);
+        btn_add_review.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+            }
+        });
+        reference.child("review").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
+                    Review review=dataSnapshot1.getValue(Review.class);
+//                    System.out.println(announcement);
+//
+                    arrayList.add(review);
+                    reviewAdapter.notifyDataSetChanged();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        reviewAdapter= new ReviewAdapter(arrayList,PetsitterReviewActivity.this);
+
+        listView.setAdapter(reviewAdapter);
+        reviewAdapter.notifyDataSetChanged();
         initializeazaAtribute();
 
         seteazaToolbar();
@@ -67,7 +121,7 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
         navigationView.setNavigationItemSelectedListener(this);
         rlLogout.setOnClickListener(this);
         ivProfil.setOnClickListener(this);
-        ivReview.setOnClickListener(this);
+
 
 
         incarcaInfoNavMenu();
@@ -100,7 +154,7 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
         idUser = userConectat.getUid();
 
         ivProfil = findViewById(R.id.ivProfile);
-        ivReview = findViewById(R.id.ivReview);
+
 
     }
 
@@ -144,9 +198,7 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
                 startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                 finish();
                 break;
-            case R.id.ivReview:
-                startActivity(new Intent(getApplicationContext(), PetsitterReviewActivity.class));
-                break;
+
 
             case R.id.rlLogout:
                 AlertDialog.Builder builder= new AlertDialog.Builder(this);
@@ -156,7 +208,7 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         mAuth.signOut();
-                        startActivity(new Intent(PetsitterHomeActivity.this, LoginActivity.class));
+                        startActivity(new Intent(PetsitterReviewActivity.this, LoginActivity.class));
 
                         finish();
                     }
@@ -177,16 +229,13 @@ public class PetsitterHomeActivity extends AppCompatActivity implements View.OnC
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_view_announcements:
-                startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
-                finish();
+                //startActivity(new Intent(getApplicationContext(),ViewAnnouncementActivity.class));
                 break;
             case R.id.nav_status_request:
                 startActivity(new Intent(getApplicationContext(),StatusRequestActivity.class));
                 finish();
                 break;
-
         }
         return true;
     }
 }
-

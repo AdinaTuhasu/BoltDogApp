@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
-    tools:context=".addAnnouncementActivity"
+    tools:context=".PetsitterReviewActivity"
     tools:openDrawer="start">
 
     <RelativeLayout
@@ -39,90 +39,36 @@
                 android:layout_marginEnd="15dp"
                 android:src="@drawable/ic_baseline_person_24" />
 
-            <ImageView
-                android:id="@+id/ivReview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/view"
-                android:layout_gravity="end"
-                android:layout_marginEnd="15dp"
-                android:src="@drawable/ic_baseline_favorite_24" />
+
         </androidx.appcompat.widget.Toolbar>
 
-        <LinearLayout
+        <View
+            android:id="@+id/view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="1dp"
+            android:layout_below="@+id/toolbar"
+            android:background="@color/white" />
+        <ListView
+            android:layout_marginTop="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:id="@+id/reviews_list"
+            >
 
-            <LinearLayout
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+        </ListView>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/reviews_list"
+            android:backgroundTint="@color/red"
+            android:text="Adauga feedback"
+            >
+        </androidx.appcompat.widget.AppCompatButton>
 
-                <ImageView
-                    android:id="@+id/pet_image"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:src="@drawable/dog_icon">
-
-                </ImageView>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/open_camera"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Deschide camera"></androidx.appcompat.widget.AppCompatButton>
-
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/pet_name"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-
-                android:hint="@string/name" />
-
-            <EditText
-                android:id="@+id/pet_breed"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:hint="@string/breed" />
-
-            <EditText
-                android:id="@+id/pet_age"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:hint="@string/age">
-
-            </EditText>
-
-            <EditText
-                android:id="@+id/pet_description"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:hint="@string/description"
-                android:lines="3">
-
-            </EditText>
-
-            <EditText
-                android:id="@+id/pet_address"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:hint="@string/address">
-
-            </EditText>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/add_announce"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Adauga">
-
-            </androidx.appcompat.widget.AppCompatButton>
-        </LinearLayout>
 
 
     </RelativeLayout>
@@ -136,7 +82,7 @@
         android:layout_gravity="start"
         android:background="@color/white"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/drawer_owner">
+        app:menu="@menu/drawer_petsitter">
 
         <RelativeLayout
             android:id="@+id/rlLogout"
