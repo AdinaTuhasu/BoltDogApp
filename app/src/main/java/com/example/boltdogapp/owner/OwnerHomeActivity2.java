@@ -110,7 +110,7 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
 
 
     public void incarcaInfoNavMenu() {
-        reference.child(idUser)
+        reference.child("users").child(mAuth.getCurrentUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -120,9 +120,9 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
                             String nume = user.getLastname();
                             String prenume = user.getFirstname();
                             numeComplet = nume + " " + prenume;
-                            String email =user.getEmail();
+                           String email =user.getEmail().toString();
 
-
+                            System.out.println(email);
                             tvNumeUserConectat.setText(numeComplet);
 
                             tvEmailUserConectat.setText(email);

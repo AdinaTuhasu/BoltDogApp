@@ -183,7 +183,7 @@ public class EditProfileOwnerActivity extends AppCompatActivity implements View.
 
 
     public void incarcaInfoNavMenu() {
-        reference.child(idUser)
+        reference.child("users").child(mAuth.getCurrentUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
