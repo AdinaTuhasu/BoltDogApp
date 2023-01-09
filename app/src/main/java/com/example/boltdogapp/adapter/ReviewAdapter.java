@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.boltdogapp.R;
@@ -25,6 +26,7 @@ public class ReviewAdapter extends BaseAdapter {
     TextView petsitterName,feedback;
     private ArrayList<Review> list = new ArrayList<Review>();
     private Context context;
+    RatingBar ratingBar;
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
 
     public ReviewAdapter(ArrayList<Review> list, Context context) {
@@ -56,7 +58,8 @@ public class ReviewAdapter extends BaseAdapter {
         view=inflater.inflate(R.layout.review_layout,viewGroup,false);
         petsitterName=view.findViewById(R.id.p_name);
         feedback=view.findViewById(R.id.feedback_petsitter);
-
+        ratingBar=view.findViewById(R.id.ratingBar2);
+        ratingBar.setRating(list.get(i).getStars_number());
         petsitterName.setText(list.get(i).getName());
         feedback.setText(list.get(i).getFeedback());
 

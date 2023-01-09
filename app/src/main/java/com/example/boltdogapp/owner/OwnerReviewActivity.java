@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -67,7 +68,7 @@ public class OwnerReviewActivity extends AppCompatActivity implements View.OnCli
     private EditText et_add_review;
     private Button btn_add;
     Button btn_add_review;
-
+    private RatingBar ratingBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,11 +79,14 @@ public class OwnerReviewActivity extends AppCompatActivity implements View.OnCli
         btn_add=findViewById(R.id.button_add_review_o);
         et_add_review.setVisibility(View.INVISIBLE);
         btn_add.setVisibility(View.INVISIBLE);
+        ratingBar=findViewById(R.id.ratingBar2);
+        ratingBar.setVisibility(View.INVISIBLE);
         btn_add_review.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 et_add_review.setVisibility(View.VISIBLE);
                 btn_add.setVisibility(View.VISIBLE);
+                ratingBar.setVisibility(View.VISIBLE);
 
             }
         });
@@ -93,7 +97,7 @@ public class OwnerReviewActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         User user=snapshot.getValue(User.class);
-                        Review review=new Review(user.getUsername(),et_add_review.getText().toString());
+                        Review review=new Review(et_add_review.getText().toString(),user.getUsername(),ratingBar.getRating());
                         reference.child("review").child(user.getUsername()).setValue(review);
 
                     }

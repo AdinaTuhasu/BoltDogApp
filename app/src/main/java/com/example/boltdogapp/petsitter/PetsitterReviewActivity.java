@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -67,25 +68,28 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
     private ListView listView;
-    private ArrayList<Review> arrayList= new ArrayList<>();
+    private ArrayList<Review> arrayList = new ArrayList<>();
     private ReviewAdapter reviewAdapter;
-
+    private RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_petsitter_review);
-        listView=findViewById(R.id.reviews_list);
-        btn_add_review=findViewById(R.id.btn_review);
-        et_add_review=findViewById(R.id.p_add_review);
-        btn_add=findViewById(R.id.button_add_review);
+        listView = findViewById(R.id.reviews_list);
+        btn_add_review = findViewById(R.id.btn_review);
+        et_add_review = findViewById(R.id.p_add_review);
+        btn_add = findViewById(R.id.button_add_review);
         et_add_review.setVisibility(View.INVISIBLE);
         btn_add.setVisibility(View.INVISIBLE);
+        ratingBar=findViewById(R.id.ratingBar1);
+        ratingBar.setVisibility(View.INVISIBLE);
         btn_add_review.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 et_add_review.setVisibility(View.VISIBLE);
                 btn_add.setVisibility(View.VISIBLE);
+                ratingBar.setVisibility(View.VISIBLE);
 
             }
         });
@@ -95,8 +99,8 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
                 reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        User user=snapshot.getValue(User.class);
-                        Review review=new Review(user.getUsername(),et_add_review.getText().toString());
+                        User user = snapshot.getValue(User.class);
+                        Review review = new Review(et_add_review.getText().toString(),user.getUsername(), ratingBar.getRating());
                         reference.child("review").child(user.getUsername()).setValue(review);
 
                     }
@@ -112,8 +116,8 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
         reference.child("review").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot1:snapshot.getChildren()){
-                    Review review=dataSnapshot1.getValue(Review.class);
+                for (DataSnapshot dataSnapshot1 : snapshot.getChildren()) {
+                    Review review = dataSnapshot1.getValue(Review.class);
 //                    System.out.println(announcement);
 //
                     arrayList.add(review);
@@ -127,7 +131,7 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
 
             }
         });
-        reviewAdapter= new ReviewAdapter(arrayList,PetsitterReviewActivity.this);
+        reviewAdapter = new ReviewAdapter(arrayList, PetsitterReviewActivity.this);
 
         listView.setAdapter(reviewAdapter);
         reviewAdapter.notifyDataSetChanged();
@@ -141,7 +145,6 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
         navigationView.setNavigationItemSelectedListener(this);
         rlLogout.setOnClickListener(this);
         ivProfil.setOnClickListener(this);
-
 
 
         incarcaInfoNavMenu();
@@ -221,7 +224,7 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
 
 
             case R.id.rlLogout:
-                AlertDialog.Builder builder= new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Logout");
                 builder.setMessage("Sunteti sigur ca vreti sa va deconectati?");
                 builder.setPositiveButton("Da", new DialogInterface.OnClickListener() {
