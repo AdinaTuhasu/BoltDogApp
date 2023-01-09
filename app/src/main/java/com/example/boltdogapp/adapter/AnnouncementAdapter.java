@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.boltdogapp.petsitter.DetailAnnouncementActivity;
@@ -14,12 +15,14 @@ import com.example.boltdogapp.R;
 import com.example.boltdogapp.model.Announcement;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class AnnouncementAdapter extends BaseAdapter {
     Button  btnView;
     TextView petName,ownerName, address;
+    ImageView imageView;
     private ArrayList<Announcement> list = new ArrayList<Announcement>();
     private Context context;
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
@@ -58,7 +61,9 @@ public class AnnouncementAdapter extends BaseAdapter {
         petName.setText(list.get(i).getName());
         ownerName.setText(list.get(i).getOwnername());
         address.setText(list.get(i).getAddress());
-
+        imageView=view.findViewById(R.id.a_pet_image);
+        String img=  list.get(i).getPhotoUrl().toString();
+        Picasso.get().load(img).into(imageView);
         btnView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

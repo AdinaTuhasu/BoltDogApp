@@ -141,7 +141,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
                 String description=petDescription.getText().toString();
                 String address=petAddress.getText().toString();
                 String ownername=user.getLastname()+" "+user.getFirstname();
-                StorageReference fr=sr.child(ownername);
+                StorageReference fr=sr.child(ownername+"."+getFileExtension(imgUri));
                 UploadTask uploadTask=fr.putFile(imgUri);
                 Task<Uri> urlTask=uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
@@ -164,41 +164,6 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
                        }
                     }
                 });
-
-
-
-
-
-
-
-
-                /*StorageReference fileReference= storageReference.child(name+".png");
-                UploadTask uploadTask= fileReference.putFile(imgUri);
-                // databaseReference.child("users").child(mAuth.getCurrentUser().getUid()).child("url").setValue(fileReference.getDownloadUrl());
-                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
-                        // Continue with the task to get the download URL
-                        return fileReference.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            Uri downloadUri = task.getResult();
-//                            mydb.child("announcements").child(mAuth.getCurrentUser().getUid()).child("url").setValue(downloadUri.toString());
-//                            announcement.setPhotoUrl(downloadUri.toString());
-                            Announcement announcement=new Announcement(ownername,name,breed,age,description,address);
-                            mydb.child("announcements").child(user.getLastname()+" "+user.getFirstname()+" "+name).setValue(announcement);
-                        } else {
-                            // Handle failures
-                            // ...
-                        }
-                    }
-                });*/
 
 
             }
@@ -294,7 +259,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        User user = snapshot.getValue(User.class);
+                         user = snapshot.getValue(User.class);
 
                         if (user != null) {
                             String nume = user.getLastname();

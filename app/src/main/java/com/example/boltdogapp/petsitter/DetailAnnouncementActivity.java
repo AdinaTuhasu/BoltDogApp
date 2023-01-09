@@ -35,6 +35,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class DetailAnnouncementActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -77,6 +78,9 @@ public class DetailAnnouncementActivity extends AppCompatActivity implements Vie
         petname.setText(announcement.getName());
         ownername.setText(announcement.getOwnername());
         breed.setText(announcement.getBreed());
+        imageView=findViewById(R.id.image_ann);
+        String img=  announcement.getPhotoUrl();
+        Picasso.get().load(img).into(imageView);
         String age1=Integer.toString(announcement.getAge());
         age.setText(age1);
         address.setText(announcement.getAddress());
