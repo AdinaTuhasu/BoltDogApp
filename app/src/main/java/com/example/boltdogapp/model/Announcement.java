@@ -17,13 +17,14 @@ public class Announcement implements Serializable {
     }
 
 
-    public Announcement(String ownername, String name, String breed, int age, String descripion, String address) {
+    public Announcement(String ownername, String name, String breed, int age, String descripion, String address,String photoUrl) {
         this.name = name;
         this.breed = breed;
         this.age = age;
         this.descripion = descripion;
         this.address = address;
         this.ownername = ownername;
+        this.photoUrl=photoUrl;
 
     }
 

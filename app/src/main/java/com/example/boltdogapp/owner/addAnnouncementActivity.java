@@ -11,6 +11,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,6 +36,9 @@ import com.example.boltdogapp.authentification.LoginActivity;
 import com.example.boltdogapp.model.Announcement;
 import com.example.boltdogapp.model.Request;
 import com.example.boltdogapp.model.User;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,6 +47,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class addAnnouncementActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private static final int PERMISSION_CODE =1234 ;
@@ -77,6 +85,8 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
     private Button addButton;
     private Button openCamera;
     private Uri imgUri;
+
+    private StorageReference sr= FirebaseStorage.getInstance().getReference("petImage");
 
     private ImageView imageView;
     @Override
@@ -131,10 +141,33 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
                 String description=petDescription.getText().toString();
                 String address=petAddress.getText().toString();
                 String ownername=user.getLastname()+" "+user.getFirstname();
-                Announcement announcement=new Announcement(ownername,name,breed,age,description,address);
+                StorageReference fr=sr.child(ownername);
+                UploadTask uploadTask=fr.putFile(imgUri);
+                Task<Uri> urlTask=uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if(!task.isSuccessful()){
+                            throw task.getException();
+                        }
 
-                reference.child("announcements").child(user.getLastname()+" "+user.getFirstname()+" "+name).setValue(announcement);
-                Toast.makeText(addAnnouncementActivity.this, "Anunt adaugat cu succes!", Toast.LENGTH_SHORT).show();
+                        return fr.getDownloadUrl();
+                    }
+
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                       if(task.isSuccessful()){
+                           Uri duri=task.getResult();
+                           Announcement announcement=new Announcement(ownername,name,breed,age,description,address,duri.toString());
+                           reference.child("announcements").child(user.getLastname()+" "+user.getFirstname()+" "+name).setValue(announcement);
+                           Toast.makeText(addAnnouncementActivity.this, "Anunt adaugat cu succes!", Toast.LENGTH_SHORT).show();
+                       }
+                    }
+                });
+
+
+
+
 
 
 
@@ -190,6 +223,13 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
 
         }
     }
+
+    private String getFileExtension(Uri uri){
+        ContentResolver cR=getContentResolver();
+        MimeTypeMap mime=MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+
 
     private void openCamera1() {
         ContentValues values=new ContentValues();
