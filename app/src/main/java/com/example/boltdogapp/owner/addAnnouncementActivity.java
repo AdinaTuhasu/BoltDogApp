@@ -1,6 +1,7 @@
 package com.example.boltdogapp.owner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -8,12 +9,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +32,7 @@ import android.widget.Toast;
 import com.example.boltdogapp.R;
 import com.example.boltdogapp.authentification.LoginActivity;
 import com.example.boltdogapp.model.Announcement;
+import com.example.boltdogapp.model.Request;
 import com.example.boltdogapp.model.User;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +44,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class addAnnouncementActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+    private static final int PERMISSION_CODE =1234 ;
+    private static final int CAPTURE_CODE =1001 ;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -80,7 +88,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
         petBreed=findViewById(R.id.pet_breed);
         petAge=findViewById(R.id.pet_age);
         petDescription=findViewById(R.id.pet_description);
-        imageView=findViewById(R.id.pet_image);
+        imageView=findViewById(R.id.pet_camera_image);
         imgUri=Uri.parse(imageView.toString());
         openCamera=findViewById(R.id.open_camera);
         initializeazaAtribute();
@@ -89,6 +97,30 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
 
         seteazaToggle();
 
+
+        openCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                    if(checkSelfPermission(Manifest.permission.CAMERA)== PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_DENIED ){
+                        String[] permision={Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        requestPermissions(permision,PERMISSION_CODE);
+                    }
+                    else{
+                        openCamera1();
+
+                    }
+                }
+                else{
+                    openCamera1();
+                }
+            }
+        });
+
+
+        
+        
+        
         addButton=findViewById(R.id.add_announce);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +180,42 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
         incarcaInfoNavMenu();
     }
 
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(resultCode==RESULT_OK){
+            imageView.setImageURI(imgUri);
+
+
+        }
+    }
+
+    private void openCamera1() {
+        ContentValues values=new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE,"Imagine noua");
+        values.put(MediaStore.Images.Media.DESCRIPTION,"De la Camera");
+        imgUri=getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
+        Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,imgUri);
+        startActivityForResult(intent,CAPTURE_CODE);
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch(requestCode){
+            case PERMISSION_CODE:
+                if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    openCamera1();
+                }
+                else{
+                    Toast.makeText(this, "Permisiunea a fost anulata!", Toast.LENGTH_SHORT).show();
+                }
+        }
+    }
 
     private void seteazaToggle() {
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);

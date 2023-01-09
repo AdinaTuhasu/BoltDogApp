@@ -8,6 +8,8 @@
     tools:context=".owner.addAnnouncementActivity"
     tools:openDrawer="start">
 
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -62,12 +64,10 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/pet_image"
+                    android:id="@+id/pet_camera_image"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:src="@drawable/dog_icon">
-
-                </ImageView>
+                    android:src="@drawable/dog_icon"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/open_camera"
