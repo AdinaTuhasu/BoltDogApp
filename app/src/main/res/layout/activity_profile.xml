@@ -58,7 +58,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@mipmap/ic_launcher_round"
-                android:id="@+id/imgProfile"/>
+                android:id="@+id/ImgProfile"/>
 
             <TextView
                 android:id="@+id/numePetsitter"

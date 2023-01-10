@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -46,7 +47,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private TextView tvNumeUserConectat;
     private TextView tvEmailUserConectat;
-
+    private ImageView image_profile;
 
     private ImageView imageView;
     private ImageView  ivReview;
@@ -70,6 +71,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         NrTelPetsitter=findViewById(R.id.telefonPetsitter);
         EmailPetsitter=findViewById(R.id.emailPetsitter);
         btnEdit=findViewById(R.id.btn_edit);
+        imageView=findViewById(R.id.ImgProfile);
         initializeazaAtribute();
 
         seteazaToolbar();
@@ -90,6 +92,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 PrenumePetsitter.setText(user.getFirstname());
                 NrTelPetsitter.setText(user.getPhoneNr());
                 EmailPetsitter.setText(user.getEmail());
+                String img= user.getPhotoUrl().toString();
+                Picasso.get().load(img).into(imageView);
             }
 
             @Override
@@ -122,7 +126,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         navigationView = findViewById(R.id.navigationView);
         tvNumeUserConectat = navigationView.getHeaderView(0).findViewById(R.id.tvNumeUserConectat);
         tvEmailUserConectat = navigationView.getHeaderView(0).findViewById(R.id.tvEmailUserConectat);
-
+        image_profile=navigationView.getHeaderView(0).findViewById(R.id.imgProfile);
 
         rlLogout = findViewById(R.id.rlLogout);
 
@@ -152,7 +156,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             tvNumeUserConectat.setText(numeComplet);
 
                             tvEmailUserConectat.setText(email);
-
+                            String img= user.getPhotoUrl().toString();
+                            Picasso.get().load(img).into(image_profile);
 
                         }
                     }

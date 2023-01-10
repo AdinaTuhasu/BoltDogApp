@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
-    tools:context=".petsitter.EditProfileActivity"
+    tools:context=".owner.EditProfileOwnerActivity"
     tools:openDrawer="start">
 
     <RelativeLayout
@@ -67,7 +67,17 @@
 
 
             </LinearLayout>
-
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/ic_baseline_person_24"
+                android:id="@+id/profile_image_e_o">
+            </ImageView>
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/choose_photo_e_o"
+                android:text="Selecteza imagine"/>
             <EditText
                 android:id="@+id/owner_lastname"
                 android:layout_width="200dp"

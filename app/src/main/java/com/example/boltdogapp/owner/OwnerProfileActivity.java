@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class OwnerProfileActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -46,7 +47,7 @@ public class OwnerProfileActivity extends AppCompatActivity implements View.OnCl
 
     private TextView tvNumeUserConectat;
     private TextView tvEmailUserConectat;
-
+    private ImageView image_profile;
 
     private ImageView imageView;
     private ImageView  ivReview;
@@ -81,7 +82,7 @@ public class OwnerProfileActivity extends AppCompatActivity implements View.OnCl
         rlLogout.setOnClickListener(this);
         ivReview.setOnClickListener(this);
         btnEditProfileOwner.setOnClickListener(this);
-
+        imageView=findViewById(R.id.imgProfileOwner);
         reference.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -90,6 +91,8 @@ public class OwnerProfileActivity extends AppCompatActivity implements View.OnCl
                 PrenumeOwner.setText(user.getFirstname());
                 NrTelOwner.setText(user.getPhoneNr());
                 EmailOwner.setText(user.getEmail());
+                String img= user.getPhotoUrl().toString();
+                Picasso.get().load(img).into(imageView);
             }
 
             @Override
@@ -122,7 +125,7 @@ public class OwnerProfileActivity extends AppCompatActivity implements View.OnCl
         navigationView = findViewById(R.id.navigationView);
         tvNumeUserConectat = navigationView.getHeaderView(0).findViewById(R.id.tvNumeUserConectat);
         tvEmailUserConectat = navigationView.getHeaderView(0).findViewById(R.id.tvEmailUserConectat);
-
+        image_profile=navigationView.getHeaderView(0).findViewById(R.id.imgProfile);
 
         rlLogout = findViewById(R.id.rlLogout);
 
@@ -152,7 +155,8 @@ public class OwnerProfileActivity extends AppCompatActivity implements View.OnCl
                             tvNumeUserConectat.setText(numeComplet);
 
                             tvEmailUserConectat.setText(email);
-
+                            String img= user.getPhotoUrl().toString();
+                            Picasso.get().load(img).into(image_profile);
 
                         }
                     }

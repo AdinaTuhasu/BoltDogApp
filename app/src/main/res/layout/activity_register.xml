@@ -8,7 +8,17 @@
     android:orientation="vertical"
     tools:context=".authentification.RegisterActivity">
 
-
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/ic_baseline_person_24"
+        android:id="@+id/profile_image">
+    </ImageView>
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/choose_photo"
+        android:text="Selecteza imagine"/>
     <EditText
         android:id="@+id/lastname"
         android:layout_width="match_parent"

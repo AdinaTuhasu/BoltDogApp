@@ -50,6 +50,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 public class addAnnouncementActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private static final int PERMISSION_CODE =1234 ;
@@ -65,7 +66,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
 
     private TextView tvNumeUserConectat;
     private TextView tvEmailUserConectat;
-
+    private ImageView image_profile;
 
 
     private ImageView ivProfil,ivReview;
@@ -240,7 +241,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
         navigationView = findViewById(R.id.navigationView);
         tvNumeUserConectat = navigationView.getHeaderView(0).findViewById(R.id.tvNumeUserConectat);
         tvEmailUserConectat = navigationView.getHeaderView(0).findViewById(R.id.tvEmailUserConectat);
-
+        image_profile=navigationView.getHeaderView(0).findViewById(R.id.imgProfile);
 
         rlLogout = findViewById(R.id.rlLogout);
 
@@ -271,7 +272,8 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
                             tvNumeUserConectat.setText(numeComplet);
 
                             tvEmailUserConectat.setText(email);
-
+                            String img= user.getPhotoUrl().toString();
+                            Picasso.get().load(img).into(image_profile);
 
                         }
                     }

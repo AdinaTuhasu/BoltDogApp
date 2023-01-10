@@ -39,6 +39,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -55,6 +56,8 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
 
     private TextView tvNumeUserConectat;
     private TextView tvEmailUserConectat;
+    private ImageView image_profile;
+
     private EditText et_add_review;
     private Button btn_add;
 
@@ -169,7 +172,7 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
         navigationView = findViewById(R.id.navigationView);
         tvNumeUserConectat = navigationView.getHeaderView(0).findViewById(R.id.tvNumeUserConectat);
         tvEmailUserConectat = navigationView.getHeaderView(0).findViewById(R.id.tvEmailUserConectat);
-
+        image_profile=navigationView.getHeaderView(0).findViewById(R.id.imgProfile);
 
         rlLogout = findViewById(R.id.rlLogout);
 
@@ -199,7 +202,8 @@ public class PetsitterReviewActivity extends AppCompatActivity implements View.O
                             tvNumeUserConectat.setText(numeComplet);
 
                             tvEmailUserConectat.setText(email);
-
+                            String img= user.getPhotoUrl().toString();
+                            Picasso.get().load(img).into(image_profile);
 
                         }
                     }

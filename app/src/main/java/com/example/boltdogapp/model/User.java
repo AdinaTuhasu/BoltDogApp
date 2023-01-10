@@ -8,10 +8,11 @@ public class User {
     private String username;
     private String password;
     private boolean petsitter;
+    private String photoUrl;
     public User() {
     }
 
-    public User(String lastname, String firstname, String email, String phoneNr, String username, String password,boolean petsitter) {
+    public User(String lastname, String firstname, String email, String phoneNr, String username, String password,boolean petsitter, String photoUrl) {
         this.lastname = lastname;
         this.firstname = firstname;
         this.email = email;
@@ -19,6 +20,15 @@ public class User {
         this.username = username;
         this.password = password;
         this.petsitter=petsitter;
+        this.photoUrl=photoUrl;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public String getLastname() {

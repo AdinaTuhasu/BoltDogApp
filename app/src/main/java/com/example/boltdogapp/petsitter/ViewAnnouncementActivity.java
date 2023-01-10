@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -50,7 +51,7 @@ public class ViewAnnouncementActivity extends AppCompatActivity implements View.
 
     private TextView tvNumeUserConectat;
     private TextView tvEmailUserConectat;
-
+    private ImageView image_profile;
 
     private ImageView imageView;
     private ImageView ivProfil, ivReview;
@@ -127,7 +128,7 @@ public class ViewAnnouncementActivity extends AppCompatActivity implements View.
         navigationView = findViewById(R.id.navigationView);
         tvNumeUserConectat = navigationView.getHeaderView(0).findViewById(R.id.tvNumeUserConectat);
         tvEmailUserConectat = navigationView.getHeaderView(0).findViewById(R.id.tvEmailUserConectat);
-
+        image_profile=navigationView.getHeaderView(0).findViewById(R.id.imgProfile);
 
         rlLogout = findViewById(R.id.rlLogout);
 
@@ -153,7 +154,8 @@ public class ViewAnnouncementActivity extends AppCompatActivity implements View.
                             numeComplet = nume + " " + prenume;
                             String email = user.getEmail();
 
-
+                            String img= user.getPhotoUrl().toString();
+                            Picasso.get().load(img).into(image_profile);
                             tvNumeUserConectat.setText(numeComplet);
 
                             tvEmailUserConectat.setText(email);
