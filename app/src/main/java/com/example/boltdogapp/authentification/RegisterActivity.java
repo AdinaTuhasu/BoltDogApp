@@ -16,6 +16,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.boltdogapp.R;
@@ -45,6 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean petsitter = false;
     Uri imgUri;
     User user;
+    private TextView back_to_login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
         radio_button_petsitter = findViewById(R.id.petsitter);
         profileImage=findViewById(R.id.profile_image);
         choose_photo=findViewById(R.id.choose_photo);
+        back_to_login=findViewById(R.id.back_to_login);
         choose_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,13 +147,20 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
+        back_to_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
         radio_button_petsitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 petsitter = true;
             }
         });
-        radio_button_petsitter.setOnClickListener(new View.OnClickListener() {
+        radio_button_owner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 petsitter = false;
