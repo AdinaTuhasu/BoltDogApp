@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/grey"
     android:orientation="horizontal"
     >
     <ImageView
@@ -53,6 +54,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/button"
             android:text="Vizualizare"
 
             android:id="@+id/view_button">

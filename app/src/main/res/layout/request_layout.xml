@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/grey"
     android:orientation="horizontal"
     >
 
@@ -28,6 +29,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/button"
 
             android:text="Accepta"
 
@@ -36,6 +38,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/button"
             android:text="Respinge"
 
             android:id="@+id/reject_button">
@@ -43,6 +46,7 @@
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/button"
             android:text="Profil"
 
             android:id="@+id/profile_button">
