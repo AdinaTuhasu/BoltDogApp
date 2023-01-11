@@ -23,10 +23,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +55,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class addAnnouncementActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private static final int PERMISSION_CODE =1234 ;
@@ -59,7 +66,8 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-
+    private Spinner spinner;
+    private List<String> rasa;
     private RelativeLayout rlLogout;
 
     private String idUser;
@@ -76,12 +84,11 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
     private EditText petName;
-    private EditText petBreed;
     private EditText petAge;
     private EditText petDescription;
     private EditText petAddress;
     private User user;
-
+    private String breed;
 
     private Button addButton;
     private Button openCamera;
@@ -96,12 +103,34 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_add_announcement);
         petName=findViewById(R.id.pet_name);
         petAddress=findViewById(R.id.pet_address);
-        petBreed=findViewById(R.id.pet_breed);
+
         petAge=findViewById(R.id.pet_age);
         petDescription=findViewById(R.id.pet_description);
         imageView=findViewById(R.id.pet_camera_image);
         imgUri=Uri.parse(imageView.toString());
         openCamera=findViewById(R.id.open_camera);
+        spinner=findViewById(R.id.spinner);
+        rasa=new ArrayList<>();
+        ArrayAdapter<CharSequence> staticAdapter = ArrayAdapter
+                .createFromResource(this, R.array.breeds_array,
+                        android.R.layout.simple_spinner_item);
+
+        spinner.setAdapter(staticAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                breed=(String) parent.getItemAtPosition(position);
+                Log.v("item", (String) parent.getItemAtPosition(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+            }
+        });
+
         initializeazaAtribute();
 
         seteazaToolbar();
@@ -138,7 +167,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
             public void onClick(View view) {
                 String name=petName.getText().toString();
                 int age=Integer.parseInt(petAge.getText().toString());
-                String breed=petBreed.getText().toString();
+
                 String description=petDescription.getText().toString();
                 String address=petAddress.getText().toString();
                 String ownername=user.getLastname()+" "+user.getFirstname();

@@ -24,5 +24,15 @@
     <string name="err_empty_nume">Introduceți numele!</string>
     <string name="err_empty_prenume">Introduceți prenumele!</string>
     <string name="err_empty_telefon">Introduceți numarul de telefon!</string>
-
+    <string-array name="breeds_array">
+        <item>Bichon</item>
+        <item>Ciobanesc</item>
+        <item>Chow-chow</item>
+        <item>Akita Inu</item>
+        <item>Shih Tzu</item>
+        <item>Pomeranian</item>
+        <item>Dog German</item>
+        <item>Amstaff</item>
+        <item>Cane Corso</item>
+    </string-array>
 </resources>

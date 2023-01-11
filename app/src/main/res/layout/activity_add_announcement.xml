@@ -84,12 +84,23 @@
                 android:layout_height="wrap_content"
 
                 android:hint="@string/name" />
-
-            <EditText
-                android:id="@+id/pet_breed"
-                android:layout_width="200dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/breed" />
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Alegeti rasa">
+
+                </TextView>
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+
 
             <EditText
                 android:id="@+id/pet_age"

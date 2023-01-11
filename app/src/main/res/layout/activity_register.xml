@@ -49,8 +49,8 @@
         android:id="@+id/phoneNr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:hint="@string/phonenr"
+        android:inputType="phone"
+        android:hint="Numar telefon"
         android:minHeight="48dp" />
 
     <EditText

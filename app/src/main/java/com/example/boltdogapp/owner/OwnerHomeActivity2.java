@@ -11,6 +11,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.ExifInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
@@ -127,6 +130,7 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
                             tvNumeUserConectat.setText(numeComplet);
 
                             tvEmailUserConectat.setText(email);
+                            image_profile.setRotation(getCameraPhotoOrientation(user.getPhotoUrl()));
                             String img= user.getPhotoUrl().toString();
                             Picasso.get().load(img).into(image_profile);
 
@@ -191,6 +195,37 @@ public class OwnerHomeActivity2 extends AppCompatActivity implements View.OnClic
                 break;
         }
         return true;
+    }
+    public static int getCameraPhotoOrientation(String imagePath) {
+        int rotate = 0;
+        try {
+            ExifInterface exif  = null;
+            try {
+                exif = new ExifInterface(imagePath);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            int orientation = exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION, 0);
+            switch (orientation) {
+
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotate = 180;
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotate = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotate = 90;
+                    break;
+                default:
+                    rotate = 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rotate;
     }
 }
 

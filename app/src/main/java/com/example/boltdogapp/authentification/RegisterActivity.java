@@ -32,6 +32,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.regex.Pattern;
+
 public class RegisterActivity extends AppCompatActivity {
     private EditText Lastname, Firstname, Email, PhoneNr, Username, Password;
     private Button signup_button, radio_button_petsitter, radio_button_owner;
@@ -80,7 +82,18 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (lastname1.isEmpty() || firstname1.isEmpty() || email1.isEmpty() || phone1.isEmpty() || username1.isEmpty() || password1.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Va rugam completati toate campurile", Toast.LENGTH_SHORT).show();
-                } else {
+                } else if (!Pattern.matches("^[A-Z][a-z]*$", lastname1)) {
+                    Toast.makeText(RegisterActivity.this, "Numele de familie trebuie sa contina doar litere", Toast.LENGTH_SHORT).show();
+                } else if (!Pattern.matches("^[A-Z][a-z]*$", firstname1)) {
+                    Toast.makeText(RegisterActivity.this, "Prenumele trebuie sa contina doar litere", Toast.LENGTH_SHORT).show();
+
+                } else if (!Pattern.matches("^(\\+4|)?(07[0-8]{1}[0-9]{1}|02[0-9]{2}|03[0-9]{2}){1}?(\\s|\\.|\\-)?([0-9]{3}(\\s|\\.|\\-|)){2}$",phone1 )) {
+                    Toast.makeText(RegisterActivity.this, "Numar de telefon invalid", Toast.LENGTH_SHORT).show();
+                } else if (!Pattern.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", email1)) {
+                    Toast.makeText(RegisterActivity.this, "Email invalid", Toast.LENGTH_SHORT).show();
+                } else if (!Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{6,}$", password1)) {
+                    Toast.makeText(RegisterActivity.this, "Parola invalida", Toast.LENGTH_SHORT).show();
+                }else {
                     mAuth.createUserWithEmailAndPassword(email1, password1).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -89,7 +102,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 StorageReference fileReference= storageReference.child(username1+"."+getFileExtension(imgUri));
 
                                 UploadTask uploadTask= fileReference.putFile(imgUri);
-                                // databaseReference.child("users").child(mAuth.getCurrentUser().getUid()).child("url").setValue(fileReference.getDownloadUrl());
                                 Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                                     @Override
                                     public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
