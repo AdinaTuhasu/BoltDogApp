@@ -1,4 +1,5 @@
 package com.example.boltdogapp.owner;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -60,8 +61,8 @@ import java.util.List;
 
 
 public class addAnnouncementActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
-    private static final int PERMISSION_CODE =1234 ;
-    private static final int CAPTURE_CODE =1001 ;
+    private static final int PERMISSION_CODE = 1234;
+    private static final int CAPTURE_CODE = 1001;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -77,10 +78,10 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
     private ImageView image_profile;
 
 
-    private ImageView ivProfil,ivReview;
+    private ImageView ivProfil, ivReview;
 
     private FirebaseUser userConectat;
-    FirebaseAuth mAuth=FirebaseAuth.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
     private String numeComplet;
     private EditText petName;
@@ -94,23 +95,24 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
     private Button openCamera;
     private Uri imgUri;
 
-    private StorageReference sr= FirebaseStorage.getInstance().getReference("petImage");
+    private StorageReference sr = FirebaseStorage.getInstance().getReference("petImage");
 
     private ImageView imageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_announcement);
-        petName=findViewById(R.id.pet_name);
-        petAddress=findViewById(R.id.pet_address);
+        petName = findViewById(R.id.pet_name);
+        petAddress = findViewById(R.id.pet_address);
 
-        petAge=findViewById(R.id.pet_age);
-        petDescription=findViewById(R.id.pet_description);
-        imageView=findViewById(R.id.pet_camera_image);
-        imgUri=Uri.parse(imageView.toString());
-        openCamera=findViewById(R.id.open_camera);
-        spinner=findViewById(R.id.spinner);
-        rasa=new ArrayList<>();
+        petAge = findViewById(R.id.pet_age);
+        petDescription = findViewById(R.id.pet_description);
+        imageView = findViewById(R.id.pet_camera_image);
+        imgUri = Uri.parse(imageView.toString());
+        openCamera = findViewById(R.id.open_camera);
+        spinner = findViewById(R.id.spinner);
+        rasa = new ArrayList<>();
         ArrayAdapter<CharSequence> staticAdapter = ArrayAdapter
                 .createFromResource(this, R.array.breeds_array,
                         android.R.layout.simple_spinner_item);
@@ -121,7 +123,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                breed=(String) parent.getItemAtPosition(position);
+                breed = (String) parent.getItemAtPosition(position);
                 Log.v("item", (String) parent.getItemAtPosition(position));
             }
 
@@ -141,57 +143,50 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
         openCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-                    if(checkSelfPermission(Manifest.permission.CAMERA)== PackageManager.PERMISSION_DENIED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_DENIED ){
-                        String[] permision={Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                        requestPermissions(permision,PERMISSION_CODE);
-                    }
-                    else{
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+                            checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                        String[] permision = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        requestPermissions(permision, PERMISSION_CODE);
+                    } else {
                         openCamera1();
 
                     }
-                }
-                else{
+                } else {
                     openCamera1();
                 }
             }
         });
 
 
-        
-        
-        
-        addButton=findViewById(R.id.add_announce);
+        addButton = findViewById(R.id.add_announce);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String name=petName.getText().toString();
-                int age=Integer.parseInt(petAge.getText().toString());
-
-                String description=petDescription.getText().toString();
-                String address=petAddress.getText().toString();
-                String ownername=user.getLastname()+" "+user.getFirstname();
-                StorageReference fr=sr.child(ownername+"."+getFileExtension(imgUri));
-                UploadTask uploadTask=fr.putFile(imgUri);
-                Task<Uri> urlTask=uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                String name = petName.getText().toString();
+                int age = Integer.parseInt(petAge.getText().toString());
+                String description = petDescription.getText().toString();
+                String address = petAddress.getText().toString();
+                String ownername = user.getLastname() + " " + user.getFirstname();
+                StorageReference fr = sr.child(ownername + "." + getFileExtension(imgUri));
+                UploadTask uploadTask = fr.putFile(imgUri);
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
                     public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if(!task.isSuccessful()){
+                        if (!task.isSuccessful()) {
                             throw task.getException();
                         }
-
                         return fr.getDownloadUrl();
                     }
-
                 }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
-                       if(task.isSuccessful()){
-                           Uri duri=task.getResult();
-                           Announcement announcement=new Announcement(ownername,name,breed,age,description,address,duri.toString());
-                           reference.child("announcements").child(user.getLastname()+" "+user.getFirstname()+" "+name).setValue(announcement);
-                           Toast.makeText(addAnnouncementActivity.this, "Anunt adaugat cu succes!", Toast.LENGTH_SHORT).show();
-                       }
+                        if (task.isSuccessful()) {
+                            Uri duri = task.getResult();
+                            Announcement announcement = new Announcement(ownername, name, breed, age, description, address, duri.toString());
+                            reference.child("announcements").child(user.getLastname() + " " + user.getFirstname() + " " + name).setValue(announcement);
+                            Toast.makeText(addAnnouncementActivity.this, "Anunt adaugat cu succes!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
@@ -212,28 +207,28 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(resultCode==RESULT_OK){
+        if (resultCode == RESULT_OK) {
             imageView.setImageURI(imgUri);
 
 
         }
     }
 
-    private String getFileExtension(Uri uri){
-        ContentResolver cR=getContentResolver();
-        MimeTypeMap mime=MimeTypeMap.getSingleton();
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
 
     private void openCamera1() {
-        ContentValues values=new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE,"Imagine noua");
-        values.put(MediaStore.Images.Media.DESCRIPTION,"De la Camera");
-        imgUri=getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
-        Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,imgUri);
-        startActivityForResult(intent,CAPTURE_CODE);
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "Imagine noua");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "De la Camera");
+        imgUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+        startActivityForResult(intent, CAPTURE_CODE);
 
 
     }
@@ -241,19 +236,18 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch(requestCode){
+        switch (requestCode) {
             case PERMISSION_CODE:
-                if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openCamera1();
-                }
-                else{
+                } else {
                     Toast.makeText(this, "Permisiunea a fost anulata!", Toast.LENGTH_SHORT).show();
                 }
         }
     }
 
     private void seteazaToggle() {
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
@@ -270,7 +264,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
         navigationView = findViewById(R.id.navigationView);
         tvNumeUserConectat = navigationView.getHeaderView(0).findViewById(R.id.tvNumeUserConectat);
         tvEmailUserConectat = navigationView.getHeaderView(0).findViewById(R.id.tvEmailUserConectat);
-        image_profile=navigationView.getHeaderView(0).findViewById(R.id.imgProfile);
+        image_profile = navigationView.getHeaderView(0).findViewById(R.id.imgProfile);
 
         rlLogout = findViewById(R.id.rlLogout);
 
@@ -278,10 +272,9 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
         idUser = userConectat.getUid();
 
         ivProfil = findViewById(R.id.ivProfile);
-        ivReview= findViewById(R.id.ivReview);
+        ivReview = findViewById(R.id.ivReview);
 
     }
-
 
 
     public void incarcaInfoNavMenu() {
@@ -289,19 +282,19 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                         user = snapshot.getValue(User.class);
+                        user = snapshot.getValue(User.class);
 
                         if (user != null) {
                             String nume = user.getLastname();
                             String prenume = user.getFirstname();
                             numeComplet = nume + " " + prenume;
-                            String email =user.getEmail();
+                            String email = user.getEmail();
 
 
                             tvNumeUserConectat.setText(numeComplet);
 
                             tvEmailUserConectat.setText(email);
-                            String img= user.getPhotoUrl().toString();
+                            String img = user.getPhotoUrl().toString();
                             Picasso.get().load(img).into(image_profile);
 
                         }
@@ -330,7 +323,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
                 break;
 
             case R.id.rlLogout:
-                AlertDialog.Builder builder= new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Logout");
                 builder.setMessage("Sunteti sigur ca vreti sa va deconectati?");
                 builder.setPositiveButton("Da", new DialogInterface.OnClickListener() {
@@ -358,7 +351,7 @@ public class addAnnouncementActivity extends AppCompatActivity implements View.O
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_add_announcements:
-                startActivity(new Intent(getApplicationContext(),addAnnouncementActivity.class));
+                startActivity(new Intent(getApplicationContext(), addAnnouncementActivity.class));
                 break;
             case R.id.nav_view_requests:
                 startActivity(new Intent(getApplicationContext(), ViewRequests.class));

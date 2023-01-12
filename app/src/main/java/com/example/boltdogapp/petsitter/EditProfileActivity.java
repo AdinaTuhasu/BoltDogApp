@@ -75,7 +75,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     private EditText petsitterLastname;
     private EditText petsitterFirstname;
     private EditText petsitterPhone;
-    private EditText petsitterEmail;
     private User user;
     Button choose_photo;
     Uri imgUri;
@@ -90,7 +89,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         petsitterLastname=findViewById(R.id.petsitter_lastname);
         petsitterFirstname=findViewById(R.id.petsitter_firstname);
         petsitterPhone=findViewById(R.id.petsitter_phone);
-        petsitterEmail=findViewById(R.id.petsitter_email);
         imageView=findViewById(R.id.profile_image_e_p);
 
         initializeazaAtribute();
@@ -115,7 +113,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 String lastname1=petsitterLastname.getText().toString();
                 String firstname1=petsitterFirstname.getText().toString();
                 String phone1=petsitterPhone.getText().toString();
-                String email1=petsitterEmail.getText().toString();
+
 
 
 
@@ -144,11 +142,10 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                             Uri downloadUri = task.getResult();
                             reference.child("users").child(mAuth.getCurrentUser().getUid()).child("firstname").setValue(firstname1);
                             reference.child("users").child(mAuth.getCurrentUser().getUid()).child("lastname").setValue(lastname1);
-                            reference.child("users").child(mAuth.getCurrentUser().getUid()).child("email").setValue(email1);
                             reference.child("users").child(mAuth.getCurrentUser().getUid()).child("phoneNr").setValue(phone1);
                             reference.child("users").child(mAuth.getCurrentUser().getUid()).child("photoUrl").setValue(downloadUri.toString());
 
-                            Toast.makeText(EditProfileActivity.this, "Informatii salvate cu succes!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditProfileActivity.this, "Informatii modificate cu succes!", Toast.LENGTH_SHORT).show();
 
 
                         } else {

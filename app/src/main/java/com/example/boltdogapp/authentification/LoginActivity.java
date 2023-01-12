@@ -78,6 +78,9 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 });
                             }
+                            else{
+                                Toast.makeText(LoginActivity.this, "Email sau parola incorecte", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
 

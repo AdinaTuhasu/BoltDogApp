@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.boltdogapp">
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
- <uses-permission android:name="android.permission.CAMERA"/>
+    package="com.example.boltdogapp" >
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BoltDogApp">
-
+        android:theme="@style/Theme.BoltDogApp" >
+        <activity
+            android:name=".petsitter.ProfileForOwner"
+            android:exported="false" />
         <activity
             android:name=".owner.OwnerReviewActivity"
             android:exported="false" />
@@ -58,7 +62,7 @@
             android:exported="false" />
         <activity
             android:name=".authentification.LoginActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -135,6 +135,7 @@
                     android:backgroundTint="@color/button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="ownerProfile"
                     android:text="Profil posesor">
 
                 </androidx.appcompat.widget.AppCompatButton>

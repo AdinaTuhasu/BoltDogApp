@@ -27,7 +27,7 @@ public class RequestAdapter extends BaseAdapter {
     private Context context;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DatabaseReference reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://boltdogapp-default-rtdb.firebaseio.com/");
-    Button btn_accenpt, btn_reject, btn_profile;
+    Button btn_accenpt, btn_reject;
     TextView petsitterName;
     public RequestAdapter(ArrayList<Request> requestArrayList, Context context) {
         this.requestArrayList = requestArrayList;
@@ -61,7 +61,7 @@ public class RequestAdapter extends BaseAdapter {
         petsitterName.setText(requestArrayList.get(i).getPetsitter());
         btn_accenpt=view.findViewById(R.id.accept_button);
         btn_reject=view.findViewById(R.id.reject_button);
-        btn_profile=view.findViewById(R.id.profile_button);
+
         btn_accenpt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
